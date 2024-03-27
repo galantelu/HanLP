@@ -1,0 +1,5 @@
+ ,begin,brand,drug,end
+begin,0,99929,0,0
+brand,0,0,99929,0
+drug,0,0,0,99929
+end,0,0,0,0
