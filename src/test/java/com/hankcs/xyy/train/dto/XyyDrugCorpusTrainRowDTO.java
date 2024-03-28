@@ -23,4 +23,8 @@ public class XyyDrugCorpusTrainRowDTO implements Serializable {
      */
     private String commonName;
 
+    /**
+     * 标记的通用名
+     */
+    private String annotationCommonName;
 }

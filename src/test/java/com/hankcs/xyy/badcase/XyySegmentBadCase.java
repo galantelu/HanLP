@@ -23,11 +23,12 @@ public class XyySegmentBadCase {
         CustomDictionary.insert("芯尔泰", XyyNatureEnum.brand.getNature().toString() + " 1024");
         CustomDictionary.insert("李夫人", XyyNatureEnum.brand.getNature().toString() + " 1024");
         CustomDictionary.insert("朗迪", XyyNatureEnum.brand.getNature().toString() + " 1024");
-        /* 药品 */
+        /* 药品 or 成分 */
         CustomDictionary.insert("磷酸氢钙", XyyNatureEnum.drug.getNature().toString() + " 1024");
         CustomDictionary.insert("维D2", XyyNatureEnum.drug.getNature().toString() + " 1024");
         CustomDictionary.insert("维生素D", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("碳酸钙D3", XyyNatureEnum.drug.getNature().toString() + " 1024");
+        CustomDictionary.insert("碳酸钙", XyyNatureEnum.drug.getNature().toString() + " 1024");
+        CustomDictionary.insert("D3", XyyNatureEnum.drug.getNature().toString() + " 1024");
         /* 修饰词 */
         CustomDictionary.insert("采森牌", XyyNatureEnum.qualifier.getNature().toString() + " 1024");
         /* 剂型 */
@@ -40,6 +41,30 @@ public class XyySegmentBadCase {
         Segment newNShortSegment = new NShortSegment();
         PerceptronLexicalAnalyzer globalPerceptronLexicalAnalyzer = TokenizerSingleton.getGlobalPerceptronLexicalAnalyzer();
         CRFLexicalAnalyzer globalCRFLexicalAnalyzer = TokenizerSingleton.getGlobalCRFLexicalAnalyzer();
+
+        text = "芯尔泰 维D2磷酸氢钙片";
+        log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, globalStandardTokenizer.segment(text));
+        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
+        log.info("【感知机分词】文本【{}】结果：{}", text, globalPerceptronLexicalAnalyzer.analyze(text));
+        log.info("【CRF分词】文本【{}】结果：{}", text, globalCRFLexicalAnalyzer.analyze(text));
+
+        text = "李夫人 采森牌维生素D钙片";
+        log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, globalStandardTokenizer.segment(text));
+        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
+        log.info("【感知机分词】文本【{}】结果：{}", text, globalPerceptronLexicalAnalyzer.analyze(text));
+        log.info("【CRF分词】文本【{}】结果：{}", text, globalCRFLexicalAnalyzer.analyze(text));
+
+        text = "朗迪 碳酸钙D3片(Ⅱ)";
+        log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, globalStandardTokenizer.segment(text));
+        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
+        log.info("【感知机分词】文本【{}】结果：{}", text, globalPerceptronLexicalAnalyzer.analyze(text));
+        log.info("【CRF分词】文本【{}】结果：{}", text, globalCRFLexicalAnalyzer.analyze(text));
+
+        log.info("===================开启索引分词===================");
+        StandardTokenizer.SEGMENT.enableIndexMode(true);
+        newNShortSegment.enableIndexMode(true);
+        globalPerceptronLexicalAnalyzer.enableIndexMode(true);
+        globalCRFLexicalAnalyzer.enableIndexMode(true);
 
         text = "芯尔泰 维D2磷酸氢钙片";
         log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, globalStandardTokenizer.segment(text));

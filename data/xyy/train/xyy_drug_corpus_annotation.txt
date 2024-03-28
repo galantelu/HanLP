@@ -1,0 +1,119 @@
+999/brand [强力/qualifier 枇杷/drugIngredient 露/dosageUnit]/drug
+神奇/brand [枇杷/drugIngredient 止咳/drugDisease 胶囊/dosageUnit]/drug
+迪冉/brand [感冒解毒/drugDisease 颗粒/dosageUnit]/drug
+京都安顺堂/brand [蜜炼/qualifier 雪梨/drugIngredient 枇杷/drugIngredient 膏/dosageUnit]/drug （/wkz 植物饮料/drugIngredient ）/wky
+昭药/brand [川贝/drugIngredient 枇杷/drugIngredient 糖浆/dosageUnit]/drug
+新峰药业/brand [感冒/drugDisease 灵/qualifier 颗粒/dosageUnit]/drug
+恒诚/brand [风寒/drugDisease 感冒/drugDisease 颗粒/dosageUnit]/drug
+骅成/brand [川贝/drugIngredient 枇杷/drugIngredient 糖浆/dosageUnit]/drug
+全泰/brand [感冒/drugDisease 咳嗽/drugDisease 颗粒/dosageUnit]/drug
+九润健业/brand [西瓜/drugIngredient 爽蜜炼/qualifier 枇杷/drugIngredient 润喉/drugDisease 糖/dosageUnit]/drug
+康奇力/brand [感冒/drugDisease 清/qualifier 片/dosageUnit]/drug
+九连山/brand [复方/qualifier 感冒/drugDisease 灵/qualifier 片/dosageUnit]/drug
+天力/brand [风寒/drugDisease 感冒/drugDisease 颗粒/dosageUnit]/drug
+健通/brand [感冒/drugDisease 软胶囊/dosageUnit]/drug
+南国/brand [感冒/drugDisease 清/qualifier 片/dosageUnit]/drug
+乐佰赛/brand [川贝/drugIngredient 枇杷/drugIngredient 糖浆/dosageUnit]/drug
+研药师/brand [感冒/drugDisease 咳嗽/drugDisease 颗粒/dosageUnit]/drug
+奈施尔/brand [同健牌/subBrand 辅酶Q10/drug 胶囊/dosageUnit]/drug
+百年传徽/brand [川贝/drugIngredient 枇杷/drugIngredient 糖浆/dosageUnit]/drug
+玉林/brand [感冒/drugDisease 止咳/drugDisease 颗粒/dosageUnit]/drug
+逸养/brand [鑫玺牌/subBrand 川贝/drugIngredient 枇杷/drugIngredient 糖/dosageUnit]/drug
+在田/brand [感冒/drugDisease 灵/qualifier 颗粒/dosageUnit]/drug
+白云山星群/brand [枇杷/ drugIngredient止咳/drugDisease 颗粒/dosageUnit]/drug
+万岁药业/brand [风寒/drugDisease 感冒/drugDisease 颗粒/dosageUnit]/drug
+牛千岁/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+白云山星群./brand [枇杷/drugIngredient 润喉/drugDisease 糖/dosageUnit]/drug
+全倍健/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+君碧莎/brand [银花/drugIngredient 感冒/drugDisease 颗粒/dosageUnit]/drug
+好大夫/brand [止咳/drugDisease 枇杷/drugDisease 颗粒/dosageUnit]/drug
+京都安顺堂/brand [川贝/drugIngredient 枇杷/drugIngredient 膏/dosageUnit]/drug
+万通/brand [感冒/drugDisease 灵/qualifier 颗粒/dosageUnit]/drug
+葛药堂/brand [蜜炼/qualifier 枇杷/drugIngredient 膏/dosageUnit]/drug
+NUE/brand [MCKIN/subBrand 辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+恒康药业/brand [感冒/drugDisease 清/qualifier 胶囊/dosageUnit]/drug
+南京同仁堂/brand [福记坊牌/subBrand 辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+衡生元/brand [柴胡/drugIngredient 感冒/drugDisease 保健贴/dosageUnit]/drug
+品先PINXIAN/brand [鑫玺牌/subBrand 川贝/drugIngredient 枇杷/drugIngredient 糖/dosageUnit]/drug
+邦琪集团/brand [[感冒/drugDisease 灵/qualifier]/coreDrug 颗粒/dosageUnit (/wkz 感冒灵茶/drug )/wky]/drug
+福资堂/brand [感冒/drugDisease 咳嗽/drugDisease 颗粒/dosageUnit]/drug
+弘羲堂/brand [感冒/drugDisease 软胶囊/dosageUnit]/drug
+汉王药业/brand [强力/qualifier 枇杷/drugIngredient 露/dosageUnit]/drug
+诺方洲/brand [雪梨/qualifier 蜜炼/qualifier 枇杷/drugIngredient 润喉/drugDisease 糖/dosageUnit （/wkz 铁盒/spec ）/wky]/drug
+修存堂/brand [胖大海/drugIngredient 蜜炼/qualifier 枇杷/drugIngredient 膏/dosageUnit]/drug
+优医堂/brand [蜜炼/qualifier 枇杷/drugIngredient 润喉/drugDisease 糖含片/dosageUnit]/drug
+长白山/brand [感冒/drugDisease 清/qualifier 片/dosageUnit]/drug
+同御堂/brand [[感冒/drugDisease 灵/qualifier]/coreDrug 颗粒/dosageUnit]/drug
+明兴/brand [辅酶Q10/drugIngredient 注射液/dosageUnit]/drug
+雷允上/brand [香菊/drugIngredient 感冒/drugDisease 颗粒/dosageUnit]/drug
+百年修医生/brand [感冒/drugDisease 退热/drugDisease 保健贴/dosageUnit]/drug
+先大/brand [强力/qualifier [枇杷/drugIngredient 露/dosageUnit]/coreDrug]/drug
+仙劲/brand [止咳/drugDisease 枇杷/drugDisease 糖浆/dosageUnit]/drug
+弘泰/brand [小儿/customer 感冒/drugDisease 颗粒/dosageUnit]/drug
+福记坊/brand [橘红/qualifier 枇杷/drugIngredient 叶雪梨/drugIngredient 压片糖果/dosageUnit]/drug
+海普/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+六和乾坤/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+美澳健/brand [辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+NUE/brand [MCKIN/subBrand 辅酶Q10/drugIngredient 胶囊12g/dosageUnit]/drug
+福仁信/brand [澳卡芙牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+汤臣纽特/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+佳莱福/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+康恩贝/brand [益普利生牌/subBrand 辅酶Q10/drugIngredient 咀嚼片/dosageUnit]/drug
+佰思佳/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+北京同仁堂/brand [德上牌/subBrand 辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+济寿祥/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+普康药业/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+美贝健/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+普康/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+美国Puritan'sPride普丽普莱/brand [美国Puritan's Pride普丽普莱/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug 100mg/specUint 240粒/specTotal
+南京同仁堂六和乾坤金奥力牌/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+元若春/brand [蓬生源牌/subBrand 辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+好心人/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+法慕尔/brand [益生祥牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+华多宝/brand [辅酶Q10/drugIngredient 咀嚼片/dosageUnit]/drug
+康恩贝/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+华南牌/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+联合维尔康/brand [联合邦利牌/subBrand 辅酶Q10/drugIngredient 维E/drugIngredient 软胶囊/dosageUnit]/drug
+利君集团/brand [善食金维牌/subBrand 辅酶Q10/drugIngredient 咀嚼片/dosageUnit]/drug
+内廷上用/brand [泽知润牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+倍力莱特/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+澳卡芙/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+南京同仁堂/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+北京同仁堂/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+金康倍/brand [天灿/subBrand 辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+信谊/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+罗氏贝特/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+修正/brand [辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+南同绿金/brand [伊路健牌/subBrand 辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+惍亿康/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+能气朗/brand [辅酶Q10/drugIngredient 片/dosageUnit]/drug
+天力康/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+倍恩力/brand [联合邦利牌/subBrand 辅酶Q10/drugIngredient 维E/drugIngredient 软胶囊/dosageUnit]/drug
+清華金思力/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+美国GNC健安喜/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug （/wkz 100毫克/specUint 120粒/specTotal ）/wky [100mg/specUint */w 120粒/specTotal]/spec
+北京同仁堂/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+长兴/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+清大广仁牌/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+华北制药/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+汤臣倍健/brand [辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+长兴牌/brand [辅酶Q10/drugIngredient 维生素E/drugIngredient 软胶囊/dosageUnit]/drug
+倍恩力/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+南京同仁堂绿金家园/brand [朋鑫牌/subBrand 辅酶Q10/drugIngredient 咀嚼片/dosageUnit]/drug
+康麦特/brand [百合康牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+美优/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+济寿祥/brand [伊路健牌/subBrand 辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+采芝林/brand [善食金维牌/subBrand 辅酶Q10/drugIngredient 咀嚼片/dosageUnit]/drug
+葵花/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+麦金利/brand [辅酶Q10/drugIngredient 片/dosageUnit]/drug
+仁和/brand [MCKIN/subBrand 辅酶Q10/drugIngredient 片/dosageUnit]/drug
+白云山/brand [百合康牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+仁和/brand [佐宁牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+易力葆/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+华北制药/brand [金奥利/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+乐宁/brand [辅酶Q10/drugIngredient 胶囊/dosageUnit]/drug
+江中/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+金奥力/brand [辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+清华金思力/brand [金奥力牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug
+精天力/brand [辅酶Q10/drugIngredient 片/dosageUnit]/drug
+滋补堂/brand [辅酶Q10/drugIngredient 片/dosageUnit]/drug
+北京同仁堂/brand [泽知润牌/subBrand 辅酶Q10/drugIngredient 软胶囊/dosageUnit]/drug [15g/specTotal]/spec

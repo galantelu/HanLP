@@ -25,4 +25,9 @@ public class XyyDrugCorpusTrainExcelRow implements Serializable {
     @ExcelProperty(index = 1)
     private String commonName;
 
+    /**
+     * 标记的通用名
+     */
+    @ExcelProperty(index = 2)
+    private String annotationCommonName;
 }

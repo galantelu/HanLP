@@ -46,25 +46,47 @@ public class XyyDrugCorpusTrainTask {
 
     private static final String modelPath = "data/xyy/train/xyy_drug_model";
 
+
+    private static final String annotationDataExcelPath = "data/xyy/train/xyy_drug_corpus_annotation.xlsx";
+
+    private static final String annotationCorpusPath = "data/xyy/train/xyy_drug_corpus_annotation.txt";
+
+    private static final String annotationModelPath = "data/xyy/train/xyy_drug_annotation_model";
+
     /**
      * 训练HMM-NGram分词模型
      */
     @Test
     public void doTrainHmmBigramModel() throws IOException {
-        /* 标注制作语料库 */
-        List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS = loadData();
-        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
-        List<String> lines = convertLines(xyyDrugCorpusTrainRowDTOS);
-        FileUtils.writeLines(new File(corpusPath), lines);
+//        /* 标注制作语料库 */
+//        List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS = loadData(dataExcelPath);
+//        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
+//        List<String> lines = convertLines(xyyDrugCorpusTrainRowDTOS, false);
+//        FileUtils.writeLines(new File(corpusPath), lines);
+//        /* 训练并生成模型 */
+//        final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
+//        CorpusLoader.walk(corpusPath, document -> dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(true))));
+//        dictionaryMaker.saveTxtTo(modelPath);
 
+        /* 标注制作语料库 */
+        List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS = loadData(annotationDataExcelPath);
+        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
+        List<String> lines = convertLines(xyyDrugCorpusTrainRowDTOS, true);
+        FileUtils.writeLines(new File(annotationCorpusPath), lines);
         /* 训练并生成模型 */
         final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
-        CorpusLoader.walk(corpusPath, document -> dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(true))));
-        dictionaryMaker.saveTxtTo(modelPath);
+        CorpusLoader.walk(annotationCorpusPath, document -> dictionaryMaker.compute(CorpusUtil.convert2CompatibleList(document.getSimpleSentenceList(true))));
+        dictionaryMaker.saveTxtTo(annotationModelPath);
     }
 
     @Test
     public void testTrainHmmBigramModel() throws IOException {
+        /**
+         * 修改hanlp.properties：
+         * CoreDictionaryPath=data/xyy/train/xyy_drug_annotation_model.txt
+         * BiGramDictionaryPath=data/xyy/train/xyy_drug_annotation_model.ngram.txt
+         */
+//        HanLP.Config.enableDebug();
 
         /* 加载自定义的词性标签 */
         Arrays.stream(XyyNatureEnum.values()).forEach(xyyNatureEnum -> Nature.create(xyyNatureEnum.getNature().toString()));
@@ -83,25 +105,30 @@ public class XyyDrugCorpusTrainTask {
         // 方式四：新建分词器
         newSegment = new ViterbiSegment();
         newSegment.enablePartOfSpeechTagging(true);
+        newSegment.enableCustomDictionary(false);
+//        newSegment.enableIndexMode(true);
+        /* HMM-Bigram分词-N-最短分路 */
+        // 方式一：新建分词器
+        Segment newNShortSegment = new NShortSegment();
+        // 方式二：新建分词器
+        newNShortSegment = HanLP.newSegment("nshort");
+        newNShortSegment.enableIndexMode(true);
 
-//        /* HMM-Bigram分词-N-最短分路 */
-//        // 方式一：新建分词器
-//        Segment newNShortSegment = new NShortSegment();
-//        // 方式二：新建分词器
-//        newNShortSegment = HanLP.newSegment("nshort");
-//
-//        /* 感知机分词 */
-//        // 方式一：使用全局的
-//        PerceptronLexicalAnalyzer globalPerceptronLexicalAnalyzer = TokenizerSingleton.getGlobalPerceptronLexicalAnalyzer();
-//        // 方式二：新建分词器
-//        PerceptronLexicalAnalyzer newPerceptronLexicalAnalyzer = new PerceptronLexicalAnalyzer();
-//        newPerceptronLexicalAnalyzer.enablePartOfSpeechTagging(true);
-//        /* CRF分词 */
-//        // 方式一：使用全局的
-//        CRFLexicalAnalyzer globalCRFLexicalAnalyzer = TokenizerSingleton.getGlobalCRFLexicalAnalyzer();
-//        // 方式二：新建分词器
-//        CRFLexicalAnalyzer newCRFLexicalAnalyzer = new CRFLexicalAnalyzer();
-//        newCRFLexicalAnalyzer.enablePartOfSpeechTagging(true);
+        /* 感知机分词 */
+        // 方式一：使用全局的
+        PerceptronLexicalAnalyzer globalPerceptronLexicalAnalyzer = TokenizerSingleton.getGlobalPerceptronLexicalAnalyzer();
+        // 方式二：新建分词器
+        PerceptronLexicalAnalyzer newPerceptronLexicalAnalyzer = new PerceptronLexicalAnalyzer();
+        newPerceptronLexicalAnalyzer.enablePartOfSpeechTagging(true);
+        newPerceptronLexicalAnalyzer.enableIndexMode(true);
+
+        /* CRF分词 */
+        // 方式一：使用全局的
+        CRFLexicalAnalyzer globalCRFLexicalAnalyzer = TokenizerSingleton.getGlobalCRFLexicalAnalyzer();
+        // 方式二：新建分词器
+        CRFLexicalAnalyzer newCRFLexicalAnalyzer = new CRFLexicalAnalyzer();
+        newCRFLexicalAnalyzer.enablePartOfSpeechTagging(true);
+        newCRFLexicalAnalyzer.enableIndexMode(true);
 
         String text;
 
@@ -116,42 +143,64 @@ public class XyyDrugCorpusTrainTask {
 //        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
 //        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
 //        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
-
     }
 
-    private List<String> convertLines(List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS) {
+    private List<String> convertLines(List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS, boolean isOnlyAnnotation) {
         if (CollectionUtils.isEmpty(xyyDrugCorpusTrainRowDTOS)) {
             return Lists.newArrayList();
         }
-        return xyyDrugCorpusTrainRowDTOS.stream().map(item -> convertLine(item)).filter(Objects::nonNull).collect(Collectors.toList());
+        return xyyDrugCorpusTrainRowDTOS.stream().map(item -> convertLine(item, isOnlyAnnotation)).filter(Objects::nonNull).collect(Collectors.toList());
     }
 
-    private String convertLine(XyyDrugCorpusTrainRowDTO xyyDrugCorpusTrainRowDTO) {
+    private String convertLine(XyyDrugCorpusTrainRowDTO xyyDrugCorpusTrainRowDTO, boolean isOnlyAnnotation) {
         if (Objects.isNull(xyyDrugCorpusTrainRowDTO) || StringUtils.isEmpty(xyyDrugCorpusTrainRowDTO.getBrand())
             || StringUtils.isEmpty(xyyDrugCorpusTrainRowDTO.getCommonName())) {
             return null;
         }
-        // 简单点
-        // 去掉空格和/
-        return new StringBuilder(xyyDrugCorpusTrainRowDTO.getBrand().replaceAll("/", "").replaceAll(" ", ""))
-            .append("/")
-            .append(XyyNatureEnum.brand.getNature().toString())
-            .append(" ")
-            .append(xyyDrugCorpusTrainRowDTO.getCommonName().replaceAll("/", "").replaceAll(" ", ""))
-            .append("/")
-            .append(XyyNatureEnum.drug.getNature().toString())
-            .toString();
+        if (isOnlyAnnotation && StringUtils.isEmpty(xyyDrugCorpusTrainRowDTO.getAnnotationCommonName())) {
+            return null;
+        }
+        if (StringUtils.isEmpty(xyyDrugCorpusTrainRowDTO.getAnnotationCommonName())) {
+            // 特殊数据：
+            /**
+             * 正常数据：品牌、通用名（末尾为剂型）
+             * 特殊数据：
+             *  品牌或通用名没有数据
+             *  品牌：（品牌）或(品牌)、实际不存在的品牌（如纯数字0、1；）
+             *  通用名：（品牌）通用名、通用名（品牌）、（品牌）（子品牌）通用名、（子品牌）通用名（品牌）、品牌牌通用名
+             *
+             */
+            // 去掉空格和/
+            // 品牌存在 纯数字的无意义值，如0、1、还有特殊字符
+            // 通用名的开头存在非品牌的XXX牌
+            //
+            return new StringBuilder(xyyDrugCorpusTrainRowDTO.getBrand().replaceAll("/", "").replaceAll(" ", ""))
+                .append("/")
+                .append(XyyNatureEnum.brand.getNature().toString())
+                .append(" ")
+                .append(xyyDrugCorpusTrainRowDTO.getCommonName().replaceAll("/", "").replaceAll(" ", ""))
+                .append("/")
+                .append(XyyNatureEnum.drug.getNature().toString())
+                .toString();
+        } else {
+            return new StringBuilder(xyyDrugCorpusTrainRowDTO.getBrand().replaceAll("/", "").replaceAll(" ", ""))
+                .append("/")
+                .append(XyyNatureEnum.brand.getNature().toString())
+                .append(" ")
+                .append(xyyDrugCorpusTrainRowDTO.getAnnotationCommonName())
+                .toString();
+        }
     }
 
 
-    private List<XyyDrugCorpusTrainRowDTO> loadData() {
+    private List<XyyDrugCorpusTrainRowDTO> loadData(String excelPath) {
         /* 解析Excel */
         // 表头
         Map<Integer, String> headMaps = Maps.newHashMapWithExpectedSize(16);
         // 行数据
         List<EasyExcelRowDataWrapper<XyyDrugCorpusTrainExcelRow>> excelRows = Lists.newArrayList();
         // 读取Excel
-        EasyExcel.read(dataExcelPath, XyyDrugCorpusTrainExcelRow.class,
+        EasyExcel.read(excelPath, XyyDrugCorpusTrainExcelRow.class,
             new EasyExcelDataAnalysisEventListener<>(new EasyExcelDataProcessor<XyyDrugCorpusTrainExcelRow>() {
                 @Override
                 public void process(List<EasyExcelRowDataWrapper<XyyDrugCorpusTrainExcelRow>> rows, AnalysisContext context) {
@@ -179,7 +228,7 @@ public class XyyDrugCorpusTrainTask {
             return null;
         }
         return XyyDrugCorpusTrainRowDTO.builder().brand(rowData.getBrand())
-            .commonName(rowData.getCommonName()).build();
+            .commonName(rowData.getCommonName()).annotationCommonName(rowData.getAnnotationCommonName()).build();
     }
 
 }
