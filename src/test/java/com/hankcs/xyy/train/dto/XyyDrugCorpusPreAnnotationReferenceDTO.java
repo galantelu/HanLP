@@ -11,20 +11,19 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Data
-public class XyyDrugCorpusTrainRowDTO implements Serializable {
+public class XyyDrugCorpusPreAnnotationReferenceDTO implements Serializable {
+    /**
+     * 关键词
+     */
+    private String keyword;
 
     /**
-     * 品牌
+     * 原词
      */
-    private String brand;
+    private String segment;
 
     /**
-     * 通用名
+     * 标记词
      */
-    private String commonName;
-
-    /**
-     * 标记的通用名
-     */
-    private String annotationCommonName;
+    private String annotationSegment;
 }

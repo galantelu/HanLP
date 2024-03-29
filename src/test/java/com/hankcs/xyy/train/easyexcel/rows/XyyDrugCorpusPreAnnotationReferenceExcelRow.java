@@ -12,22 +12,22 @@ import java.io.Serializable;
 @NoArgsConstructor
 @Builder
 @Data
-public class XyyDrugCorpusTrainExcelRow implements Serializable {
+public class XyyDrugCorpusPreAnnotationReferenceExcelRow implements Serializable {
     /**
-     * 品牌
+     * 关键词
      */
     @ExcelProperty(index = 0)
-    private String brand;
+    private String keyword;
 
     /**
-     * 通用名
+     * 原词
      */
     @ExcelProperty(index = 1)
-    private String commonName;
+    private String segment;
 
     /**
-     * 标记的通用名
+     * 标记词
      */
     @ExcelProperty(index = 2)
-    private String annotationCommonName;
+    private String annotationSegment;
 }
