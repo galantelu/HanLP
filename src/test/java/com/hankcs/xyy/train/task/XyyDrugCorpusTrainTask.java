@@ -106,13 +106,15 @@ public class XyyDrugCorpusTrainTask {
         newSegment = new ViterbiSegment();
         newSegment.enablePartOfSpeechTagging(true);
         newSegment.enableCustomDictionary(false);
-//        newSegment.enableIndexMode(true);
+        newSegment.enableIndexMode(true);
+//        newSegment.enableIndexMode(1);
         /* HMM-Bigram分词-N-最短分路 */
         // 方式一：新建分词器
         Segment newNShortSegment = new NShortSegment();
         // 方式二：新建分词器
         newNShortSegment = HanLP.newSegment("nshort");
         newNShortSegment.enableIndexMode(true);
+//        newNShortSegment.enableIndexMode(1);
 
         /* 感知机分词 */
         // 方式一：使用全局的
@@ -121,6 +123,7 @@ public class XyyDrugCorpusTrainTask {
         PerceptronLexicalAnalyzer newPerceptronLexicalAnalyzer = new PerceptronLexicalAnalyzer();
         newPerceptronLexicalAnalyzer.enablePartOfSpeechTagging(true);
         newPerceptronLexicalAnalyzer.enableIndexMode(true);
+//        newPerceptronLexicalAnalyzer.enableIndexMode(1);
 
         /* CRF分词 */
         // 方式一：使用全局的
@@ -129,20 +132,21 @@ public class XyyDrugCorpusTrainTask {
         CRFLexicalAnalyzer newCRFLexicalAnalyzer = new CRFLexicalAnalyzer();
         newCRFLexicalAnalyzer.enablePartOfSpeechTagging(true);
         newCRFLexicalAnalyzer.enableIndexMode(true);
+//        newCRFLexicalAnalyzer.enableIndexMode(1);
 
         String text;
 
         text = "999感冒灵颗粒";
         log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, newSegment.seg(text));
-//        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
-//        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
-//        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
+        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
+        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
+        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
 
         text = "汤臣倍健辅酶Q10天然维生素E软胶囊";
         log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, newSegment.seg(text));
-//        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
-//        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
-//        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
+        log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
+        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
+        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
     }
 
     private List<String> convertLines(List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS, boolean isOnlyAnnotation) {
