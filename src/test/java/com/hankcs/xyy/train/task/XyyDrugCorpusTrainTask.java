@@ -9,8 +9,6 @@ import com.hankcs.hanlp.corpus.dictionary.NatureDictionaryMaker;
 import com.hankcs.hanlp.corpus.document.CorpusLoader;
 import com.hankcs.hanlp.corpus.tag.Nature;
 import com.hankcs.hanlp.corpus.util.CorpusUtil;
-import com.hankcs.hanlp.model.crf.CRFLexicalAnalyzer;
-import com.hankcs.hanlp.model.perceptron.PerceptronLexicalAnalyzer;
 import com.hankcs.hanlp.seg.NShort.NShortSegment;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.Viterbi.ViterbiSegment;
@@ -44,14 +42,13 @@ public class XyyDrugCorpusTrainTask {
 
     private static final String corpusPath = "data/xyy/train/xyy_drug_corpus.txt";
 
-    private static final String modelPath = "data/xyy/train/xyy_drug_model";
-
+    private static final String modelPath = "data/xyy/model/xyy_drug_model";
 
     private static final String annotationDataExcelPath = "data/xyy/train/xyy_drug_corpus_annotation.xlsx";
 
     private static final String annotationCorpusPath = "data/xyy/train/xyy_drug_corpus_annotation.txt";
 
-    private static final String annotationModelPath = "data/xyy/train/xyy_drug_annotation_model";
+    private static final String annotationModelPath = "data/xyy/model/xyy_drug_annotation_model";
 
     /**
      * 训练HMM-NGram分词模型
@@ -84,7 +81,7 @@ public class XyyDrugCorpusTrainTask {
         /**
          * 修改hanlp.properties：
          * CoreDictionaryPath=data/xyy/train/xyy_drug_annotation_model.txt
-         * BiGramDictionaryPath=data/xyy/train/xyy_drug_annotation_model.ngram.txt
+         * BiGramDictionaryPath=data/xyy/model/xyy_drug_annotation_model.ngram.txt
          */
 //        HanLP.Config.enableDebug();
 
@@ -106,47 +103,30 @@ public class XyyDrugCorpusTrainTask {
         newSegment = new ViterbiSegment();
         newSegment.enablePartOfSpeechTagging(true);
         newSegment.enableCustomDictionary(false);
-        newSegment.enableIndexMode(true);
+//        newSegment.enableIndexMode(true);
 //        newSegment.enableIndexMode(1);
         /* HMM-Bigram分词-N-最短分路 */
         // 方式一：新建分词器
         Segment newNShortSegment = new NShortSegment();
         // 方式二：新建分词器
         newNShortSegment = HanLP.newSegment("nshort");
-        newNShortSegment.enableIndexMode(true);
+        newNShortSegment.enableCustomDictionary(false);
+//        newNShortSegment.enableIndexMode(true);
 //        newNShortSegment.enableIndexMode(1);
-
-        /* 感知机分词 */
-        // 方式一：使用全局的
-        PerceptronLexicalAnalyzer globalPerceptronLexicalAnalyzer = TokenizerSingleton.getGlobalPerceptronLexicalAnalyzer();
-        // 方式二：新建分词器
-        PerceptronLexicalAnalyzer newPerceptronLexicalAnalyzer = new PerceptronLexicalAnalyzer();
-        newPerceptronLexicalAnalyzer.enablePartOfSpeechTagging(true);
-        newPerceptronLexicalAnalyzer.enableIndexMode(true);
-//        newPerceptronLexicalAnalyzer.enableIndexMode(1);
-
-        /* CRF分词 */
-        // 方式一：使用全局的
-        CRFLexicalAnalyzer globalCRFLexicalAnalyzer = TokenizerSingleton.getGlobalCRFLexicalAnalyzer();
-        // 方式二：新建分词器
-        CRFLexicalAnalyzer newCRFLexicalAnalyzer = new CRFLexicalAnalyzer();
-        newCRFLexicalAnalyzer.enablePartOfSpeechTagging(true);
-        newCRFLexicalAnalyzer.enableIndexMode(true);
-//        newCRFLexicalAnalyzer.enableIndexMode(1);
 
         String text;
 
         text = "999感冒灵颗粒";
         log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, newSegment.seg(text));
         log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
-        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
-        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
+//        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
+//        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
 
         text = "汤臣倍健辅酶Q10天然维生素E软胶囊";
         log.info("【HMM-Bigram分词-最短分路】文本【{}】结果：{}", text, newSegment.seg(text));
         log.info("【HMM-Bigram分词-N-最短分路】文本【{}】结果：{}", text, newNShortSegment.seg(text));
-        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
-        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
+//        log.info("【感知机分词】文本【{}】结果：{}", text, newPerceptronLexicalAnalyzer.analyze(text));
+//        log.info("【CRF分词】文本【{}】结果：{}", text, newCRFLexicalAnalyzer.analyze(text));
     }
 
     private List<String> convertLines(List<XyyDrugCorpusTrainRowDTO> xyyDrugCorpusTrainRowDTOS, boolean isOnlyAnnotation) {
