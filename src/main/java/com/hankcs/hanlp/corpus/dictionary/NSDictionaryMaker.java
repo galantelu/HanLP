@@ -30,6 +30,9 @@ import java.util.ListIterator;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * 地名词典制作器。
+ * NS（Name of Spatial location）：代表地名，用于标注文本中出现的地理位置名称，如城市、国家、河流、山脉等。例如，“北京”在“我在北京工作”这句话中会被标注为地名（NS）。
+ *
  * @author hankcs
  */
 public class NSDictionaryMaker extends CommonDictionaryMaker

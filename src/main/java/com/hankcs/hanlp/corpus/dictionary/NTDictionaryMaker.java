@@ -26,6 +26,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
+ * 机构名词典制作器。
+ * NT（Name of Organization or Institution）：代表机构名，用于标注文本中出现的公司、组织、政府机构等名称。例如，“苹果公司”在“苹果公司发布了新产品”这句话中会被标注为机构名（NT）。
+ *
  * @author hankcs
  */
 public class NTDictionaryMaker extends CommonDictionaryMaker

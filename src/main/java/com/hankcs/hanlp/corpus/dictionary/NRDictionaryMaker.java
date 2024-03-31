@@ -22,7 +22,9 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * nr词典（词典+ngram转移+词性转移矩阵）制作工具
+ * 人名词典制作器。
+ * NR（Name of Person）：代表人名，用于标注文本中出现的人物名称。例如，“张三”在“张三去了北京”这句话中会被标注为人名（NR）。
+ *
  * @author hankcs
  */
 public class NRDictionaryMaker extends CommonDictionaryMaker

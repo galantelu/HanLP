@@ -33,22 +33,22 @@ public class XyyNerTest {
         CustomDictionary.insert("妇炎洁", XyyNatureEnum.brand.getNature().toString() + " 1024");
         CustomDictionary.insert("汤臣倍健", XyyNatureEnum.brand.getNature().toString() + " 1024");
         /* 药品 */
-        CustomDictionary.insert("阿司匹林肠溶", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("复方黄连素", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("双氯芬酸钠缓释", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("醋酸泼尼松", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("辅酶Q10维生素E", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("辅酶Q10", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("维生素E", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("维生素E", XyyNatureEnum.drug.getNature().toString() + " 1024");
-        CustomDictionary.insert("感冒灵", XyyNatureEnum.drug.getNature().toString() + " 1024");
+        CustomDictionary.insert("阿司匹林肠溶", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("复方黄连素", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("双氯芬酸钠缓释", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("醋酸泼尼松", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("辅酶Q10维生素E", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("辅酶Q10", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("维生素E", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("维生素E", XyyNatureEnum.core.getNature().toString() + " 1024");
+        CustomDictionary.insert("感冒灵", XyyNatureEnum.core.getNature().toString() + " 1024");
         /* 修饰词 */
         CustomDictionary.insert("天然", XyyNatureEnum.qualifier.getNature().toString() + " 1024");
         /* 剂型 */
-        CustomDictionary.insert("口服液", XyyNatureEnum.dosageUnit.getNature().toString() + " 1024");
-        CustomDictionary.insert("颗粒", XyyNatureEnum.dosageUnit.getNature().toString() + " 1024");
-        CustomDictionary.insert("胶囊", XyyNatureEnum.dosageUnit.getNature().toString() + " 1024");
-        CustomDictionary.insert("软胶囊", XyyNatureEnum.dosageUnit.getNature().toString() + " 1024");
+        CustomDictionary.insert("口服液", XyyNatureEnum.dosage.getNature().toString() + " 1024");
+        CustomDictionary.insert("颗粒", XyyNatureEnum.dosage.getNature().toString() + " 1024");
+        CustomDictionary.insert("胶囊", XyyNatureEnum.dosage.getNature().toString() + " 1024");
+        CustomDictionary.insert("软胶囊", XyyNatureEnum.dosage.getNature().toString() + " 1024");
 
         /* HMM-Bigram分词-最短分路： */
         // 方式一：使用全局的

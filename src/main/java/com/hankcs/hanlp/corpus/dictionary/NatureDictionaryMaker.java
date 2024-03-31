@@ -27,6 +27,8 @@ import java.util.TreeSet;
 import static com.hankcs.hanlp.utility.Predefine.logger;
 
 /**
+ * 词性词典制作器。
+ *
  * @author hankcs
  */
 public class NatureDictionaryMaker extends CommonDictionaryMaker

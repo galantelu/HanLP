@@ -14,37 +14,34 @@ import java.util.Objects;
 @Getter
 public enum XyyNatureEnum {
     /**
-     * 药名
+     * 核心词
      */
-    drug(Nature.create("drug")),
-    /**
-     * 核心药名
-     */
-    coreDrug(Nature.create("coreDrug")),
+    core(Nature.create("core")),
     /**
      * 品牌
      */
     brand(Nature.create("brand")),
+
     /**
      * 子品牌
      */
     subBrand(Nature.create("subBrand")),
     /**
-     * 药品成分
+     * 成分
      */
-    drugIngredient(Nature.create("drugIngredient")),
+    ingredient(Nature.create("ingredient")),
     /**
-     * 药品病症
+     * 适应症
      */
-    drugDisease(Nature.create("drugDisease")),
+    disease(Nature.create("disease")),
     /**
      * 修饰词
      */
     qualifier(Nature.create("qualifier")),
     /**
-     * 适应人群
+     * 剂型
      */
-    customer(Nature.create("customer")),
+    dosage(Nature.create("dosage")),
     /**
      * 规格
      */
@@ -57,10 +54,6 @@ public enum XyyNatureEnum {
      * 规格：总量
      */
     specTotal(Nature.create("specTotal")),
-    /**
-     * 剂型
-     */
-    dosageUnit(Nature.create("dosageUnit")),
     ;
     private Nature nature;
 

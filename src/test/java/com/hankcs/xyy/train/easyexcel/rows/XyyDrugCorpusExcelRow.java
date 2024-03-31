@@ -41,7 +41,7 @@ public class XyyDrugCorpusExcelRow implements Serializable {
     /**
      * 标记的通用名
      */
-    @ColumnWidth(value = 300)
+    @ColumnWidth(value = 255)
     @ExcelProperty(index = 2)
     private String annotationCommonName;
 
@@ -56,7 +56,7 @@ public class XyyDrugCorpusExcelRow implements Serializable {
     /**
      * 预标记的通用名
      */
-    @ColumnWidth(value = 300)
+    @ColumnWidth(value = 255)
     @ExcelProperty(index = 4)
     private String preAnnotationCommonName;
 }

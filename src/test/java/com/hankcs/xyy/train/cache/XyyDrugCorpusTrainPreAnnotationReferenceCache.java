@@ -27,42 +27,42 @@ public class XyyDrugCorpusTrainPreAnnotationReferenceCache {
 
     private static final String dataExcelPath = "data/xyy/train/xyy_drug_corpus_pre_annotation_reference.xlsx";
 
-    private static final Map<String, List<String>> keywordToSegmentsMap;
+    private static final Map<String, List<String>> coreTermToSegmentsMap;
 
-    private static final Map<String, Map<String, String>> keywordToSegmentAnnotationMap;
+    private static final Map<String, Map<String, String>> coreTermToSegmentAnnotationMap;
 
     static {
-        keywordToSegmentsMap = Maps.newHashMapWithExpectedSize(16);
-        keywordToSegmentAnnotationMap = Maps.newHashMapWithExpectedSize(16);
+        coreTermToSegmentsMap = Maps.newHashMapWithExpectedSize(16);
+        coreTermToSegmentAnnotationMap = Maps.newHashMapWithExpectedSize(16);
         List<XyyDrugCorpusPreAnnotationReferenceDTO> referenceDTOS = loadData(dataExcelPath);
         for (XyyDrugCorpusPreAnnotationReferenceDTO referenceDTO : referenceDTOS) {
-            String keyword = referenceDTO.getKeyword();
+            String coreTerm = referenceDTO.getCoreTerm();
             String segment = referenceDTO.getSegment();
             String annotationSegment = referenceDTO.getAnnotationSegment();
-            if (StringUtils.isEmpty(keyword) || StringUtils.isEmpty(segment) || StringUtils.isEmpty(annotationSegment)) {
+            if (StringUtils.isEmpty(coreTerm) || StringUtils.isEmpty(segment) || StringUtils.isEmpty(annotationSegment)) {
                 continue;
             }
-            List<String> segments = keywordToSegmentsMap.get(keyword);
+            List<String> segments = coreTermToSegmentsMap.get(coreTerm);
             if (Objects.isNull(segments)) {
                 segments = Lists.newArrayListWithExpectedSize(16);
-                keywordToSegmentsMap.put(keyword, segments);
+                coreTermToSegmentsMap.put(coreTerm, segments);
             }
             segments.add(segment);
-            Map<String, String> segmentAnnotationMap = keywordToSegmentAnnotationMap.get(keyword);
+            Map<String, String> segmentAnnotationMap = coreTermToSegmentAnnotationMap.get(coreTerm);
             if (Objects.isNull(segmentAnnotationMap)) {
                 segmentAnnotationMap = Maps.newHashMapWithExpectedSize(16);
-                keywordToSegmentAnnotationMap.put(keyword, segmentAnnotationMap);
+                coreTermToSegmentAnnotationMap.put(coreTerm, segmentAnnotationMap);
             }
             segmentAnnotationMap.put(segment, annotationSegment);
         }
     }
 
-    public static List<String> listSegments(String keyword) {
-        return keywordToSegmentsMap.get(keyword);
+    public static List<String> listSegments(String coreTerm) {
+        return coreTermToSegmentsMap.get(coreTerm);
     }
 
-    public static Map<String, String> getSegmentAnnotationMap(String keyword) {
-        return keywordToSegmentAnnotationMap.get(keyword);
+    public static Map<String, String> getSegmentAnnotationMap(String coreTerm) {
+        return coreTermToSegmentAnnotationMap.get(coreTerm);
     }
 
     private static List<XyyDrugCorpusPreAnnotationReferenceDTO> loadData(String excelPath) {
@@ -99,7 +99,7 @@ public class XyyDrugCorpusTrainPreAnnotationReferenceCache {
         if (Objects.isNull(rowData)) {
             return null;
         }
-        return XyyDrugCorpusPreAnnotationReferenceDTO.builder().keyword(rowData.getKeyword())
+        return XyyDrugCorpusPreAnnotationReferenceDTO.builder().coreTerm(rowData.getCoreTerm())
             .segment(rowData.getSegment()).annotationSegment(rowData.getAnnotationSegment()).build();
     }
 

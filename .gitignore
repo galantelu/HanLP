@@ -30,8 +30,10 @@ hs_err_pid*
 data/model/*
 data/xyy/model/*
 data/xyy/train/*
+data/xyy/backup/*
 !data/xyy/model/.gitkeep
 !data/xyy/train/.gitkeep
+!data/xyy/backup/.gitkeep
 !data/model/README.txt
 # 系统文件
 **/.DS_Store

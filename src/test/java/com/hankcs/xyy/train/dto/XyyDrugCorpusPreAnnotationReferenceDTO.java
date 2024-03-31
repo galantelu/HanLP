@@ -13,9 +13,9 @@ import java.io.Serializable;
 @Data
 public class XyyDrugCorpusPreAnnotationReferenceDTO implements Serializable {
     /**
-     * 关键词
+     * 核心词
      */
-    private String keyword;
+    private String coreTerm;
 
     /**
      * 原词

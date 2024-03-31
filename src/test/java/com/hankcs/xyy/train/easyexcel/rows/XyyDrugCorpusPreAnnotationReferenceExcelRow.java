@@ -14,10 +14,10 @@ import java.io.Serializable;
 @Data
 public class XyyDrugCorpusPreAnnotationReferenceExcelRow implements Serializable {
     /**
-     * 关键词
+     * 核心词
      */
     @ExcelProperty(index = 0)
-    private String keyword;
+    private String coreTerm;
 
     /**
      * 原词
