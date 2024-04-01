@@ -39,28 +39,40 @@ public class XyyDrugCorpusTrainTask {
     @Test
     public void trainModels() throws IOException {
         this.generateXyyDrugCwsText();
-        this.doTrainHmmBigramModel();
-        this.doTrainPerceptronModel();
-        this.doTrainCrfModel();
+        this.doTrainHmmBigramModel(XyyConstants.corpusPath, XyyConstants.modelPath);
+        this.doTrainPerceptronModel(XyyConstants.corpusPath, XyyConstants.perceptronCwsModelPath, XyyConstants.perceptronPosModelPath, XyyConstants.perceptronNerModelPath);
+        this.doTrainCrfModel(XyyConstants.corpusPath, XyyConstants.crfCwsModelPath, XyyConstants.crfPosModelPath, XyyConstants.crfNerModelPath);
     }
 
     @Test
     public void compareModels() throws IOException {
-        this.testTrainHmmBigramModel();
-        this.testTrainPerceptronModel();
-        this.testTrainCrfModel();
+        this.testTrainHmmBigramModel(XyyConstants.modelPath);
+        this.testTrainPerceptronModel(XyyConstants.perceptronCwsModelPath, XyyConstants.perceptronPosModelPath, XyyConstants.perceptronNerModelPath);
+        this.testTrainCrfModel(XyyConstants.crfCwsModelPath, XyyConstants.crfPosModelPath, XyyConstants.crfNerModelPath);
     }
 
     /**
      * 训练CRF模型
      */
     @Test
-    public void doTrainCrfModel() throws IOException {
+    public void doTrainCrfModel(String corpusPath, String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
-        String corpusPath = XyyConstants.corpusPath;
-        String cwsModelPath = XyyConstants.crfCwsModelPath;
-        String posModelPath = XyyConstants.crfPosModelPath;
-        String nerModelPath = XyyConstants.crfNerModelPath;
+        if (StringUtils.isEmpty(corpusPath)) {
+            corpusPath = XyyConstants.corpusPath;
+        }
+        if (StringUtils.isEmpty(cwsModelPath)) {
+            cwsModelPath = XyyConstants.crfCwsModelPath;
+        }
+        if (StringUtils.isEmpty(posModelPath)) {
+            posModelPath = XyyConstants.crfPosModelPath;
+        }
+        if (StringUtils.isEmpty(nerModelPath)) {
+            nerModelPath = XyyConstants.crfNerModelPath;
+        }
+//        String corpusPath = XyyConstants.corpusPath;
+//        String cwsModelPath = XyyConstants.crfCwsModelPath;
+//        String posModelPath = XyyConstants.crfPosModelPath;
+//        String nerModelPath = XyyConstants.crfNerModelPath;
 
         /* 训练并生成模型 */
         // 感知机中文分词
@@ -85,11 +97,20 @@ public class XyyDrugCorpusTrainTask {
      * @throws IOException
      */
     @Test
-    public void testTrainCrfModel() throws IOException {
+    public void testTrainCrfModel(String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
-        String cwsModelPath = XyyConstants.crfCwsModelPath;
-        String posModelPath = XyyConstants.crfPosModelPath;
-        String nerModelPath = XyyConstants.crfNerModelPath;
+        if (StringUtils.isEmpty(cwsModelPath)) {
+            cwsModelPath = XyyConstants.crfCwsModelPath;
+        }
+        if (StringUtils.isEmpty(posModelPath)) {
+            posModelPath = XyyConstants.crfPosModelPath;
+        }
+        if (StringUtils.isEmpty(nerModelPath)) {
+            nerModelPath = XyyConstants.crfNerModelPath;
+        }
+//        String cwsModelPath = XyyConstants.crfCwsModelPath;
+//        String posModelPath = XyyConstants.crfPosModelPath;
+//        String nerModelPath = XyyConstants.crfNerModelPath;
 
 //        HanLP.Config.enableDebug();
 
@@ -170,17 +191,28 @@ public class XyyDrugCorpusTrainTask {
         log.info("         ");
     }
 
-
     /**
      * 训练感知机模型
      */
     @Test
-    public void doTrainPerceptronModel() throws IOException {
+    public void doTrainPerceptronModel(String corpusPath, String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
-        String corpusPath = XyyConstants.corpusPath;
-        String cwsModelPath = XyyConstants.perceptronCwsModelPath;
-        String posModelPath = XyyConstants.perceptronPosModelPath;
-        String nerModelPath = XyyConstants.perceptronNerModelPath;
+        if (StringUtils.isEmpty(corpusPath)) {
+            corpusPath = XyyConstants.corpusPath;
+        }
+        if (StringUtils.isEmpty(cwsModelPath)) {
+            cwsModelPath = XyyConstants.perceptronCwsModelPath;
+        }
+        if (StringUtils.isEmpty(posModelPath)) {
+            posModelPath = XyyConstants.perceptronPosModelPath;
+        }
+        if (StringUtils.isEmpty(nerModelPath)) {
+            nerModelPath = XyyConstants.perceptronNerModelPath;
+        }
+//        String corpusPath = XyyConstants.corpusPath;
+//        String cwsModelPath = XyyConstants.perceptronCwsModelPath;
+//        String posModelPath = XyyConstants.perceptronPosModelPath;
+//        String nerModelPath = XyyConstants.perceptronNerModelPath;
 
         /* 训练并生成模型 */
         // 感知机中文分词
@@ -213,11 +245,20 @@ public class XyyDrugCorpusTrainTask {
      * @throws IOException
      */
     @Test
-    public void testTrainPerceptronModel() throws IOException {
+    public void testTrainPerceptronModel(String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
-        String cwsModelPath = XyyConstants.perceptronCwsModelPath;
-        String posModelPath = XyyConstants.perceptronPosModelPath;
-        String nerModelPath = XyyConstants.perceptronNerModelPath;
+        if (StringUtils.isEmpty(cwsModelPath)) {
+            cwsModelPath = XyyConstants.perceptronCwsModelPath;
+        }
+        if (StringUtils.isEmpty(posModelPath)) {
+            posModelPath = XyyConstants.perceptronPosModelPath;
+        }
+        if (StringUtils.isEmpty(nerModelPath)) {
+            nerModelPath = XyyConstants.perceptronNerModelPath;
+        }
+//        String cwsModelPath = XyyConstants.perceptronCwsModelPath;
+//        String posModelPath = XyyConstants.perceptronPosModelPath;
+//        String nerModelPath = XyyConstants.perceptronNerModelPath;
 
 //        HanLP.Config.enableDebug();
 
@@ -302,10 +343,16 @@ public class XyyDrugCorpusTrainTask {
      * 训练HMM-NGram分词模型
      */
     @Test
-    public void doTrainHmmBigramModel() throws IOException {
+    public void doTrainHmmBigramModel(String corpusPath, String modelPath) throws IOException {
         /* 可变参数 */
-        String corpusPath = XyyConstants.corpusPath;
-        String modelPath = XyyConstants.modelPath;
+        if (StringUtils.isEmpty(corpusPath)) {
+            corpusPath = XyyConstants.corpusPath;
+        }
+        if (StringUtils.isEmpty(modelPath)) {
+            modelPath = XyyConstants.modelPath;
+        }
+//        String corpusPath = XyyConstants.corpusPath;
+//        String modelPath = XyyConstants.modelPath;
 
         /* 训练并生成模型 */
         final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
@@ -323,9 +370,12 @@ public class XyyDrugCorpusTrainTask {
     }
 
     @Test
-    public void testTrainHmmBigramModel() throws IOException {
+    public void testTrainHmmBigramModel(String modelPath) throws IOException {
         /* 可变参数 */
-        String modelPath = XyyConstants.modelPath;
+        if (StringUtils.isEmpty(modelPath)) {
+            modelPath = XyyConstants.modelPath;
+        }
+//        String modelPath = XyyConstants.modelPath;
 
 //        HanLP.Config.enableDebug();
 
