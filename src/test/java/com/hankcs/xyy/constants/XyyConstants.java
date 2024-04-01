@@ -8,5 +8,17 @@ public class XyyConstants {
 
     public static final String modelPath = "data/xyy/model/xyy_drug_model";
 
+    public static final String perceptronCwsModelPath = "data/xyy/model/perceptron/xyy_drug_cws.bin";
+
+    public static final String perceptronPosModelPath = "data/xyy/model/perceptron/xyy_drug_pos.bin";
+
+    public static final String perceptronNerModelPath = "data/xyy/model/perceptron/xyy_drug_ner.bin";
+
+    public static final String crfCwsModelPath = "data/xyy/model/crf/xyy_drug_cws.bin";
+
+    public static final String crfPosModelPath = "data/xyy/model/crf/xyy_drug_pos.bin";
+
+    public static final String crfNerModelPath = "data/xyy/model/crf/xyy_drug_ner.bin";
+
     public static final String backupDirPath = "data/xyy/backup";
 }
