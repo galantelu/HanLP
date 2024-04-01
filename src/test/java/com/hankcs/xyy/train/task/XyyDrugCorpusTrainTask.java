@@ -36,6 +36,20 @@ import java.util.stream.Collectors;
 @Slf4j
 public class XyyDrugCorpusTrainTask {
 
+    @Test
+    public void trainModels() throws IOException {
+        this.doTrainHmmBigramModel();
+        this.doTrainPerceptronModel();
+        this.doTrainCrfModel();
+    }
+
+    @Test
+    public void compareModels() throws IOException {
+        this.testTrainHmmBigramModel();
+        this.testTrainPerceptronModel();
+        this.testTrainCrfModel();
+    }
+
     /**
      * 训练CRF模型
      */
@@ -118,6 +132,11 @@ public class XyyDrugCorpusTrainTask {
         log.info("         ");
 
         text = "蜜炼雪梨枇杷";
+        log.info("【CRF-粗分词】文本【{}】结果：{}", text, analyzer.analyze(text));
+        log.info("【CRF-细分词】文本【{}】结果：{}", text, indexAnalyzer.analyze(text));
+        log.info("         ");
+
+        text = "蜜炼枇杷糖（方形铁盒）";
         log.info("【CRF-粗分词】文本【{}】结果：{}", text, analyzer.analyze(text));
         log.info("【CRF-细分词】文本【{}】结果：{}", text, indexAnalyzer.analyze(text));
         log.info("         ");
@@ -253,6 +272,11 @@ public class XyyDrugCorpusTrainTask {
         log.info("【感知机-细分词】文本【{}】结果：{}", text, indexAnalyzer.analyze(text));
         log.info("         ");
 
+        text = "蜜炼枇杷糖（方形铁盒）";
+        log.info("【感知机-粗分词】文本【{}】结果：{}", text, analyzer.analyze(text));
+        log.info("【感知机-细分词】文本【{}】结果：{}", text, indexAnalyzer.analyze(text));
+        log.info("         ");
+
         text = "汤臣倍健辅酶Q10天然维生素E软胶囊";
         log.info("【感知机-粗分词】文本【{}】结果：{}", text, analyzer.analyze(text));
         log.info("【感知机-细分词】文本【{}】结果：{}", text, indexAnalyzer.analyze(text));
@@ -376,6 +400,11 @@ public class XyyDrugCorpusTrainTask {
         log.info("【HMM-Bigram分词-最短分路-细分词】文本【{}】结果：{}", text, indexNewSegment.seg(text));
         log.info("         ");
 
+        text = "蜜炼枇杷糖（方形铁盒）";
+        log.info("【HMM-Bigram分词-最短分路-粗分词】文本【{}】结果：{}", text, newSegment.seg(text));
+        log.info("【HMM-Bigram分词-最短分路-细分词】文本【{}】结果：{}", text, indexNewSegment.seg(text));
+        log.info("         ");
+
         text = "汤臣倍健辅酶Q10天然维生素E软胶囊";
         log.info("【HMM-Bigram分词-最短分路-粗分词】文本【{}】结果：{}", text, newSegment.seg(text));
         log.info("【HMM-Bigram分词-最短分路-细分词】文本【{}】结果：{}", text, indexNewSegment.seg(text));
@@ -427,7 +456,7 @@ public class XyyDrugCorpusTrainTask {
         return new StringBuilder(xyyDrugCorpusRowDTO.getBrand().replaceAll("/", "").replaceAll(" ", ""))
                 .append("/")
                 .append(XyyNatureEnum.brand.getNature().toString())
-                .append(" ")
+                .append("  /w ")
                 .append(xyyDrugCorpusRowDTO.getAnnotationCommonName())
                 .toString();
     }
