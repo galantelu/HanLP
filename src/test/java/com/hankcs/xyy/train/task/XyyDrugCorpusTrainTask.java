@@ -38,6 +38,7 @@ public class XyyDrugCorpusTrainTask {
 
     @Test
     public void trainModels() throws IOException {
+        this.generateXyyDrugCwsText();
         this.doTrainHmmBigramModel();
         this.doTrainPerceptronModel();
         this.doTrainCrfModel();
@@ -56,18 +57,10 @@ public class XyyDrugCorpusTrainTask {
     @Test
     public void doTrainCrfModel() throws IOException {
         /* 可变参数 */
-        String corpusExcelPath = XyyConstants.corpusExcelPath;
         String corpusPath = XyyConstants.corpusPath;
         String cwsModelPath = XyyConstants.crfCwsModelPath;
         String posModelPath = XyyConstants.crfPosModelPath;
         String nerModelPath = XyyConstants.crfNerModelPath;
-
-//        /* 标注制作语料库 */
-//        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
-//        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
-//        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
-//        log.info("语料集，总共{}行", lines.size());
-//        FileUtils.writeLines(new File(corpusPath), lines);
 
         /* 训练并生成模型 */
         // 感知机中文分词
@@ -184,18 +177,10 @@ public class XyyDrugCorpusTrainTask {
     @Test
     public void doTrainPerceptronModel() throws IOException {
         /* 可变参数 */
-        String corpusExcelPath = XyyConstants.corpusExcelPath;
         String corpusPath = XyyConstants.corpusPath;
         String cwsModelPath = XyyConstants.perceptronCwsModelPath;
         String posModelPath = XyyConstants.perceptronPosModelPath;
         String nerModelPath = XyyConstants.perceptronNerModelPath;
-
-//        /* 标注制作语料库 */
-//        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
-//        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
-//        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
-//        log.info("语料集，总共{}行", lines.size());
-//        FileUtils.writeLines(new File(corpusPath), lines);
 
         /* 训练并生成模型 */
         // 感知机中文分词
@@ -319,16 +304,8 @@ public class XyyDrugCorpusTrainTask {
     @Test
     public void doTrainHmmBigramModel() throws IOException {
         /* 可变参数 */
-        String corpusExcelPath = XyyConstants.corpusExcelPath;
         String corpusPath = XyyConstants.corpusPath;
         String modelPath = XyyConstants.modelPath;
-
-        /* 标注制作语料库 */
-        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
-        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
-        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
-        log.info("语料集，总共{}行", lines.size());
-        FileUtils.writeLines(new File(corpusPath), lines);
 
         /* 训练并生成模型 */
         final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
@@ -439,6 +416,20 @@ public class XyyDrugCorpusTrainTask {
         log.info("【HMM-Bigram分词-最短分路-粗分词】文本【{}】结果：{}", text, newSegment.seg(text));
         log.info("【HMM-Bigram分词-最短分路-细分词】文本【{}】结果：{}", text, indexNewSegment.seg(text));
         log.info("         ");
+    }
+
+    @Test
+    public void generateXyyDrugCwsText() throws IOException {
+        /* 可变参数 */
+        String corpusExcelPath = XyyConstants.corpusExcelPath;
+        String corpusPath = XyyConstants.corpusPath;
+
+        /* 标注制作语料库 */
+        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
+        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
+        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
+        log.info("语料集，总共{}行", lines.size());
+        FileUtils.writeLines(new File(corpusPath), lines);
     }
 
     private List<String> convertLines(List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS) {
