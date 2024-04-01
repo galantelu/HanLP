@@ -94,8 +94,9 @@ public class XyyDrugCorpusPreDealTask {
 
         /* 预标记：是根据预标记参考进行标记，请提前根据现有数据，维护好参考数据。参考数据见：data/xyy/train/xyy_drug_corpus_pre_annotation_reference.xlsx */
         // top 1 核心词
-        List<String> coreTerms = Lists.newArrayList("枇杷");
-
+        List<String> coreTerms = Lists.newArrayList();
+//        coreTerms.add("枇杷");
+//        coreTerms.add("感冒灵");
         if (CollectionUtils.isEmpty(coreTerms)) {
             log.info("没有需要预处理的关键字，终止");
             return;

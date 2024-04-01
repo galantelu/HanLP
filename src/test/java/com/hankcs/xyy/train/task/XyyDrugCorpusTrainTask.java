@@ -38,11 +38,12 @@ public class XyyDrugCorpusTrainTask {
         String corpusExcelPath = XyyConstants.corpusExcelPath;
         String modelPath = XyyConstants.modelPath;
 
-//        /* 标注制作语料库 */
-//        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
-//        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
-//        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
-//        FileUtils.writeLines(new File(XyyConstants.corpusPath), lines);
+        /* 标注制作语料库 */
+        List<XyyDrugCorpusRowDTO> xyyDrugCorpusRowDTOS = XyyDrugCorpusExcelOperator.readAllRows(corpusExcelPath);
+        // TODO 10个中，8个最为训练集，1个作为验证集，1个作为测试集
+        List<String> lines = convertLines(xyyDrugCorpusRowDTOS);
+        log.info("语料集，总共{}行", lines.size());
+        FileUtils.writeLines(new File(XyyConstants.corpusPath), lines);
 
         /* 训练并生成模型 */
         final NatureDictionaryMaker dictionaryMaker = new NatureDictionaryMaker();
@@ -149,10 +150,7 @@ public class XyyDrugCorpusTrainTask {
 
     private String convertLine(XyyDrugCorpusRowDTO xyyDrugCorpusRowDTO) {
         if (Objects.isNull(xyyDrugCorpusRowDTO) || StringUtils.isEmpty(xyyDrugCorpusRowDTO.getBrand())
-            || StringUtils.isEmpty(xyyDrugCorpusRowDTO.getCommonName())) {
-            return null;
-        }
-        if (StringUtils.isEmpty(xyyDrugCorpusRowDTO.getAnnotationCommonName())) {
+            || StringUtils.isEmpty(xyyDrugCorpusRowDTO.getAnnotationCommonName())) {
             return null;
         }
         return new StringBuilder(xyyDrugCorpusRowDTO.getBrand().replaceAll("/", "").replaceAll(" ", ""))

@@ -54,6 +54,10 @@ public enum XyyNatureEnum {
      * 规格：总量
      */
     specTotal(Nature.create("specTotal")),
+    /**
+     * 包装类型
+     */
+    packaging(Nature.create("packaging")),
     ;
     private Nature nature;
 
