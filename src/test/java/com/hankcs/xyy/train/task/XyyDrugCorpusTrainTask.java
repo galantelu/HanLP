@@ -37,6 +37,31 @@ import java.util.stream.Collectors;
 public class XyyDrugCorpusTrainTask {
 
     @Test
+    public void trainPkuAndXyyDrugModels() throws IOException {
+        HanLP.Config.enableDebug();
+        this.doTrainHmmBigramModel("data/xyy/train/199801_xyy_drug.txt", "data/xyy/model/199801_xyy_drug_model");
+        this.doTrainPerceptronModel("data/xyy/train/199801_xyy_drug.txt",
+                "data/xyy/model/perceptron/199801_xyy_drug_cws.bin",
+                "data/xyy/model/perceptron/199801_xyy_drug_pos.bin",
+                "data/xyy/model/perceptron/199801_xyy_drug_ner.bin");
+        this.doTrainCrfModel("data/xyy/train/199801_xyy_drug.txt",
+                "data/xyy/model/crf/199801_xyy_drug_cws.bin",
+                "data/xyy/model/crf/199801_xyy_drug_pos.bin",
+                "data/xyy/model/crf/199801_xyy_drug_ner.bin");
+    }
+
+    @Test
+    public void comparePkuAndXyyDrugModels() throws IOException {
+        this.testTrainHmmBigramModel("data/xyy/model/199801_xyy_drug_model");
+        this.testTrainPerceptronModel("data/xyy/model/perceptron/199801_xyy_drug_cws.bin",
+                "data/xyy/model/perceptron/199801_xyy_drug_pos.bin",
+                "data/xyy/model/perceptron/199801_xyy_drug_ner.bin");
+        this.testTrainCrfModel("data/xyy/model/crf/199801_xyy_drug_cws.bin",
+                "data/xyy/model/crf/199801_xyy_drug_pos.bin",
+                "data/xyy/model/crf/199801_xyy_drug_ner.bin");
+    }
+
+    @Test
     public void trainModels() throws IOException {
         this.generateXyyDrugCwsText();
         this.doTrainHmmBigramModel(XyyConstants.corpusPath, XyyConstants.modelPath);
@@ -53,8 +78,13 @@ public class XyyDrugCorpusTrainTask {
 
     /**
      * 训练CRF模型
+     *
+     * @param corpusPath
+     * @param cwsModelPath
+     * @param posModelPath
+     * @param nerModelPath
+     * @throws IOException
      */
-    @Test
     public void doTrainCrfModel(String corpusPath, String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
         if (StringUtils.isEmpty(corpusPath)) {
@@ -94,9 +124,11 @@ public class XyyDrugCorpusTrainTask {
     /**
      * 测试CRF模型
      *
+     * @param cwsModelPath
+     * @param posModelPath
+     * @param nerModelPath
      * @throws IOException
      */
-    @Test
     public void testTrainCrfModel(String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
         if (StringUtils.isEmpty(cwsModelPath)) {
@@ -193,8 +225,13 @@ public class XyyDrugCorpusTrainTask {
 
     /**
      * 训练感知机模型
+     *
+     * @param corpusPath
+     * @param cwsModelPath
+     * @param posModelPath
+     * @param nerModelPath
+     * @throws IOException
      */
-    @Test
     public void doTrainPerceptronModel(String corpusPath, String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
         if (StringUtils.isEmpty(corpusPath)) {
@@ -242,9 +279,11 @@ public class XyyDrugCorpusTrainTask {
     /**
      * 测试感知机模型
      *
+     * @param cwsModelPath
+     * @param posModelPath
+     * @param nerModelPath
      * @throws IOException
      */
-    @Test
     public void testTrainPerceptronModel(String cwsModelPath, String posModelPath, String nerModelPath) throws IOException {
         /* 可变参数 */
         if (StringUtils.isEmpty(cwsModelPath)) {
@@ -341,9 +380,11 @@ public class XyyDrugCorpusTrainTask {
 
     /**
      * 训练HMM-NGram分词模型
+     *
+     * @param corpusPath
+     * @param modelPath
      */
-    @Test
-    public void doTrainHmmBigramModel(String corpusPath, String modelPath) throws IOException {
+    public void doTrainHmmBigramModel(String corpusPath, String modelPath) {
         /* 可变参数 */
         if (StringUtils.isEmpty(corpusPath)) {
             corpusPath = XyyConstants.corpusPath;
@@ -369,8 +410,12 @@ public class XyyDrugCorpusTrainTask {
         dictionaryMaker.saveTxtTo(modelPath);
     }
 
-    @Test
-    public void testTrainHmmBigramModel(String modelPath) throws IOException {
+    /**
+     * 测试HMM-NGram分词模型
+     *
+     * @param modelPath
+     */
+    public void testTrainHmmBigramModel(String modelPath) {
         /* 可变参数 */
         if (StringUtils.isEmpty(modelPath)) {
             modelPath = XyyConstants.modelPath;
