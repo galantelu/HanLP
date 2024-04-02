@@ -43,7 +43,7 @@
                     <target>${java.version}</target>
                     <showDeprecation>true</showDeprecation>
                     <showWarnings>true</showWarnings>
-                    <debug>true</debug>
+<!--                    <debug>true</debug>-->
                 </configuration>
             </plugin>
             <!-- 打包插件，排除语料库和语料库工具以及日志配置文件 -->
@@ -119,17 +119,10 @@
         <httpcomponents.version>4.4.1</httpcomponents.version>
         <aviator.version>3.3.0</aviator.version>
         <guava.version>27.0.1-jre</guava.version>
-        <junit.version>4.11</junit.version>
         <!-- SpringBoot -->
         <spring.boot.version>2.3.12.RELEASE</spring.boot.version>
     </properties>
     <dependencies>
-        <dependency>
-            <groupId>junit</groupId>
-            <artifactId>junit</artifactId>
-            <version>${junit.version}</version>
-            <scope>test</scope>
-        </dependency>
         <!-- Utils -->
         <dependency>
             <groupId>org.projectlombok</groupId>

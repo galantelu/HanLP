@@ -39,4 +39,4 @@ data/xyy/backup/*
 **/.DS_Store
 .java-version
 # 配置文件等（资源文件统一放到data）
-src/main/resources/
+#src/main/resources/

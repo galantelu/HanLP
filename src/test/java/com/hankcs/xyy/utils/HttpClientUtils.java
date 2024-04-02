@@ -22,9 +22,9 @@ public class HttpClientUtils {
         httpClientBuilder.evictIdleConnections(5L, TimeUnit.SECONDS);
         CloseableHttpClient httpClient = httpClientBuilder.build();
         HttpComponentsClientHttpRequestFactory httpComponentsClientHttpRequestFactory = new HttpComponentsClientHttpRequestFactory(httpClient);
-        httpComponentsClientHttpRequestFactory.setConnectionRequestTimeout(3000);
-        httpComponentsClientHttpRequestFactory.setConnectTimeout(3000);
-        httpComponentsClientHttpRequestFactory.setReadTimeout(3000);
+        httpComponentsClientHttpRequestFactory.setConnectionRequestTimeout(10000);
+        httpComponentsClientHttpRequestFactory.setConnectTimeout(10000);
+        httpComponentsClientHttpRequestFactory.setReadTimeout(120000);
         restTemplate = new RestTemplate(httpComponentsClientHttpRequestFactory);
     }
 }
