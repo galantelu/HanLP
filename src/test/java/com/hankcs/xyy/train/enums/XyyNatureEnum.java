@@ -14,14 +14,31 @@ import java.util.Objects;
 @Getter
 public enum XyyNatureEnum {
     /**
+     * 品牌
+     */
+    brand(Nature.create("brand")),
+    /**
      * 核心词
      */
     core(Nature.create("core")),
     /**
-     * 品牌
+     * 剂型
      */
-    brand(Nature.create("brand")),
+    dosage(Nature.create("dosage")),
+    /**
+     * 企业名称
+     */
+    corp(Nature.create("corp")),
+    /**
+     * 规格
+     */
+    spec(Nature.create("spec")),
+    /**
+     * other
+     */
+    other(Nature.create("other")),
 
+    /* ==========以下为废弃=========== */
     /**
      * 子品牌
      */
@@ -39,14 +56,6 @@ public enum XyyNatureEnum {
      */
     qualifier(Nature.create("qualifier")),
     /**
-     * 剂型
-     */
-    dosage(Nature.create("dosage")),
-    /**
-     * 规格
-     */
-    spec(Nature.create("spec")),
-    /**
      * 规格：单位
      */
     specUint(Nature.create("specUint")),
@@ -58,6 +67,7 @@ public enum XyyNatureEnum {
      * 包装类型
      */
     packaging(Nature.create("packaging")),
+
     ;
     private Nature nature;
 
