@@ -187,6 +187,8 @@ public class XyyDrugCorpusPreDealTask {
             xyyDrugCorpusRowDTO.setIsPreAnnotation("1");
             xyyDrugCorpusRowDTO.setPreAnnotationCommonName(stringBuilder.toString());
         }
+        // 还原
+        new DynamicCustomDictionary().reload();
     }
 
 }

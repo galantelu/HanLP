@@ -281,10 +281,8 @@ public class XyyDrugCorpusMakeDictionaryTask {
         String original = "广西广恒医药有限公司";
 
         // 仅仅使用默认自定义词典，避免领域数据干扰行政区域数据。
-        HanLP.Config.CustomDictionaryPath = new String[]{"data/dictionary/custom/CustomDictionary.txt"};
-        DynamicCustomDictionary dictionary = new DynamicCustomDictionary(HanLP.Config.CustomDictionaryPath);
-        CustomDictionary.DEFAULT = dictionary;
-        CustomDictionary.reload();
+        DynamicCustomDictionary dictionary = new DynamicCustomDictionary("data/dictionary/custom/CustomDictionary.txt");
+        dictionary.reload();
         newSegment.enableCustomDictionary(dictionary);
 
         // 加载Excel
@@ -327,6 +325,9 @@ public class XyyDrugCorpusMakeDictionaryTask {
             }
             log.info("【{}】解析为：【{}】", original, real);
         }
+
+        // 还原自定义词典配置
+        new DynamicCustomDictionary().reload();
     }
 
     private List<String> tryParseCorpAreas(String original) {
@@ -335,7 +336,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
             return null;
         }
         List<Term> terms = newSegment.seg(original);
-        log.info("分词：{}", terms.toString());
+//        log.info("分词：{}", terms.toString());
         return terms.stream().map(term -> {
             if (Objects.equals(term.nature, Nature.ns)) {
                 return term.word;
@@ -405,10 +406,8 @@ public class XyyDrugCorpusMakeDictionaryTask {
         String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的店铺展示名称&厂商_2024_04_02.xlsx";
 
         // 仅仅使用默认自定义词典，避免领域数据干扰行政区域数据。
-        HanLP.Config.CustomDictionaryPath = new String[]{"data/dictionary/custom/CustomDictionary.txt"};
-        DynamicCustomDictionary dictionary = new DynamicCustomDictionary(HanLP.Config.CustomDictionaryPath);
-        CustomDictionary.DEFAULT = dictionary;
-        CustomDictionary.reload();
+        DynamicCustomDictionary dictionary = new DynamicCustomDictionary("data/dictionary/custom/CustomDictionary.txt");
+        dictionary.reload();
         newSegment.enableCustomDictionary(dictionary);
 
         /* 备份 */
@@ -429,6 +428,9 @@ public class XyyDrugCorpusMakeDictionaryTask {
         List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(rowDTOS);
         XyyDrugCorpusDictionaryExcelOperator.coverWrite(dictionaryExcelPath, excelRows);
         log.debug("处理店铺名称&厂商名称词典Excel，成功。");
+
+        // 还原自定义词典配置
+        new DynamicCustomDictionary().reload();
     }
 
     private List<Pattern> tryGetParsePatterns(String original) {
