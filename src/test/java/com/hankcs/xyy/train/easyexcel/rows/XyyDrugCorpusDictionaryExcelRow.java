@@ -38,4 +38,11 @@ public class XyyDrugCorpusDictionaryExcelRow implements Serializable {
     @ColumnWidth(value = 100)
     @ExcelProperty(index = 1)
     private String realDictionary;
+
+    /**
+     * 词典
+     */
+    @ColumnWidth(value = 100)
+    @ExcelProperty(index = 2)
+    private String realDictionary2;
 }

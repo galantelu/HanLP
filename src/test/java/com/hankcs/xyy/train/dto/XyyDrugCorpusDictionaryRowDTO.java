@@ -25,4 +25,9 @@ public class XyyDrugCorpusDictionaryRowDTO implements Serializable {
      * 词典
      */
     private String realDictionary;
+
+    /**
+     * 词典2
+     */
+    private String realDictionary2;
 }

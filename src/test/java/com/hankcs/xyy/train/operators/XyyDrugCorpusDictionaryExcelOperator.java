@@ -55,22 +55,22 @@ public class XyyDrugCorpusDictionaryExcelOperator {
         List<EasyExcelRowDataWrapper<XyyDrugCorpusDictionaryExcelRow>> excelRows = Lists.newArrayList();
         // 读取Excel
         EasyExcel.read(corpusExcelPath, XyyDrugCorpusDictionaryExcelRow.class,
-            new EasyExcelDataAnalysisEventListener<>(new EasyExcelDataProcessor<XyyDrugCorpusDictionaryExcelRow>() {
-                @Override
-                public void process(List<EasyExcelRowDataWrapper<XyyDrugCorpusDictionaryExcelRow>> rows, AnalysisContext context) {
-                    if (CollectionUtils.isNotEmpty(rows)) {
-                        excelRows.addAll(rows);
+                new EasyExcelDataAnalysisEventListener<>(new EasyExcelDataProcessor<XyyDrugCorpusDictionaryExcelRow>() {
+                    @Override
+                    public void process(List<EasyExcelRowDataWrapper<XyyDrugCorpusDictionaryExcelRow>> rows, AnalysisContext context) {
+                        if (CollectionUtils.isNotEmpty(rows)) {
+                            excelRows.addAll(rows);
+                        }
                     }
-                }
 
-                @Override
-                public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
-                    Integer rowIndex = context.readRowHolder().getRowIndex();
-                    if (Objects.equals(rowIndex, 0) && MapUtils.isNotEmpty(headMap)) {
-                        headMaps.putAll(headMap);
+                    @Override
+                    public void invokeHeadMap(Map<Integer, String> headMap, AnalysisContext context) {
+                        Integer rowIndex = context.readRowHolder().getRowIndex();
+                        if (Objects.equals(rowIndex, 0) && MapUtils.isNotEmpty(headMap)) {
+                            headMaps.putAll(headMap);
+                        }
                     }
-                }
-            })).sheet().headRowNumber(1).doRead();
+                })).sheet().headRowNumber(1).doRead();
         if (CollectionUtils.isEmpty(excelRows)) {
             return Lists.newArrayList();
         }
@@ -93,8 +93,9 @@ public class XyyDrugCorpusDictionaryExcelOperator {
             return null;
         }
         return XyyDrugCorpusDictionaryRowDTO.builder().dictionary(rowData.getDictionary())
-            .realDictionary(rowData.getRealDictionary())
-            .build();
+                .realDictionary(rowData.getRealDictionary())
+                .realDictionary2(rowData.getRealDictionary2())
+                .build();
     }
 
     public static List<XyyDrugCorpusDictionaryExcelRow> createExcelRows(List<XyyDrugCorpusDictionaryRowDTO> xyyDrugCorpusRowDTOS) {
@@ -110,6 +111,7 @@ public class XyyDrugCorpusDictionaryExcelOperator {
         }
         return XyyDrugCorpusDictionaryExcelRow.builder().dictionary(xyyDrugCorpusRowDTO.getDictionary())
                 .realDictionary(xyyDrugCorpusRowDTO.getRealDictionary())
-            .build();
+                .realDictionary2(xyyDrugCorpusRowDTO.getRealDictionary2())
+                .build();
     }
 }
