@@ -32,13 +32,25 @@ public class XyyCustomDictionaryNerTest {
         newIndexSegment.enableIndexMode(1);
         newIndexSegment.enableNormalization(true);
 
-        log.info("{}", CustomDictionary.get("感冒"));
-//        CustomDictionary.insert("广州市中谦医疗器械有限公司", "12444455");
-        log.info("{}", CustomDictionary.get("感冒灵"));
+//        log.info("{}", CustomDictionary.get("诺金诺金"));
+//        CustomDictionary.insert("诺金诺金", "brand 999999");
+//        log.info("{}", CustomDictionary.get("诺金诺金"));
 
         String text;
 
-        text = "广州市中谦医疗器械有限公司";
+        text = "乐克菲强力枇杷露";
+        log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
+        log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
+
+        text = "福记坊枇杷秋梨膏";
+        log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
+        log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
+
+        text = "益克停强力枇杷露";
+        log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
+        log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
+
+        text = "诺金诺金复方感冒灵片";
         log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
         log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
 
@@ -47,14 +59,6 @@ public class XyyCustomDictionaryNerTest {
         log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
 
         text = "感冒灵";
-        log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
-        log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
-
-        text = "感冒药";
-        log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
-        log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
-
-        text = "感冒";
         log.info("文本【{}】粗结果：{}", text, newSegment.seg(text));
         log.info("文本【{}】细结果：{}", text, newIndexSegment.seg(text));
     }

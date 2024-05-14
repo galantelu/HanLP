@@ -1,107 +1,36 @@
 package com.hankcs.xyy.train.task;
 
 import com.google.common.collect.Lists;
-import com.google.common.collect.Maps;
 import com.google.common.collect.Sets;
-import com.hankcs.hanlp.HanLP;
-import com.hankcs.hanlp.corpus.tag.Nature;
-import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
 import com.hankcs.hanlp.dictionary.other.CharTable;
-import com.hankcs.hanlp.seg.Segment;
-import com.hankcs.hanlp.seg.common.Term;
-import com.hankcs.xyy.train.dto.XyyDrugCorpusDictionaryRowDTO;
-import com.hankcs.xyy.train.easyexcel.rows.XyyDrugCorpusDictionaryExcelRow;
-import com.hankcs.xyy.train.enums.XyyNatureEnum;
-import com.hankcs.xyy.train.operators.XyyDrugCorpusDictionaryExcelOperator;
-import lombok.extern.slf4j.Slf4j;
-import org.apache.commons.collections.CollectionUtils;
+import com.hankcs.xyy.utils.XyyDrugCorpusUtils;
 import org.apache.commons.io.FileUtils;
 import org.apache.commons.lang3.StringUtils;
 import org.junit.Test;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.*;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+import java.util.List;
+import java.util.Objects;
+import java.util.Set;
 import java.util.stream.Collectors;
 
 /**
+ * xyy物料：制作词典
+ *
  * @author luyong
  */
-@Slf4j
 public class XyyDrugCorpusMakeDictionaryTask {
 
-    private static Segment newSegment = HanLP.newSegment("viterbi");
-
-    private static Segment newIndexSegment = HanLP.newSegment("viterbi");
-
-    private static final Pattern brandRegex = Pattern.compile("^[\\(（](.+?)[\\)）]$");
-
-    /**
-     * 过滤掉的品牌
-     */
-    private static final Set<String> excludeBrands = Sets.newHashSet("0", "*", "-", "1");
-    /**
-     * 特殊词典映射
-     */
-    private static final Map<String, String> specialBrandMap = Maps.newHashMap();
-
-    /**
-     * 过滤掉的展示名称
-     */
-    private static final Set<String> excludeShowNames = Sets.newHashSet();
-    /**
-     * 特殊词典映射
-     */
-    private static final Map<String, String> specialShowNameMap = Maps.newHashMap();
-
-    /**
-     * 过滤掉的店铺名称
-     */
-    private static final Set<String> excludeCorps = Sets.newHashSet();
-    /**
-     * 特殊词典映射
-     */
-    private static final Map<String, String> specialCorpMap = Maps.newHashMap();
-
-    private static final Set<String> removeCorpPrefixSet = Sets.newHashSet();
-
-    private static final Pattern parseSpecialCorpYuanPattern = Pattern.compile("^(.*?)原(.*)$");
-
-    private static final Pattern parseSpecialCorpWeiTuoPattern = Pattern.compile("^(.*?)委托(.*)$");
-
-    static {
-        newSegment.enablePartOfSpeechTagging(true);
-        newSegment.enableCustomDictionaryForcing(true);
-
-        newIndexSegment.enablePartOfSpeechTagging(true);
-        newIndexSegment.enableCustomDictionaryForcing(true);
-        newIndexSegment.enableIndexMode(1);
-
-        specialBrandMap.put("（汲盛堂", "汲盛堂");
-        specialShowNameMap.put("", "");
-        specialCorpMap.put("", "");
-        removeCorpPrefixSet.add("4月3日1700截单");
-        removeCorpPrefixSet.add("4月3日16时截单4月7日发货");
-        removeCorpPrefixSet.add("4月3日1500截单");
-        removeCorpPrefixSet.add("4月3日1730截单");
-        removeCorpPrefixSet.add("4月3日1600截单");
-        removeCorpPrefixSet.add("4月3日16时截单6日7时发货");
-        removeCorpPrefixSet.add("4月2日2000截单");
-        removeCorpPrefixSet.add("4月3日1600截单");
-        removeCorpPrefixSet.add("清明不打烊");
-
-    }
-
     @Test
-    public void checkDictionaryDifference() throws IOException {
+    public void checkDictionaryDuplicate() throws IOException {
         /* 可变参数 */
         String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";
         String corpDictionaryPath = "data/xyy/dictionary/corp.original.txt";
         String specDictionaryPath = "data/xyy/dictionary/spec.original.txt";
-
         String dosageDictionaryPath = "data/xyy/dictionary/dosage.original.txt";
+        String coreDictionaryPath = "data/xyy/dictionary/core.original.txt";
+        String otherDictionaryPath = "data/xyy/dictionary/other.original.txt";
 
         Set<String> brands = Sets.newHashSet(FileUtils.readLines(new File(brandDictionaryPath), "UTF-8"));
         brands.remove("");
@@ -113,108 +42,85 @@ public class XyyDrugCorpusMakeDictionaryTask {
         specs.remove("");
 
         Set<String> dosages = Sets.newHashSet(FileUtils.readLines(new File(dosageDictionaryPath), "UTF-8"));
-        specs.remove("");
+        dosages.remove("");
 
-        //
-//        Sets.intersection(brands, corps).stream().forEach(System.out::println);
-//        Sets.intersection(brands, specs).stream().forEach(System.out::println);
-//        Sets.intersection(brands, dosages).stream().forEach(System.out::println);
-//
-//
+        Set<String> cores = Sets.newHashSet(FileUtils.readLines(new File(coreDictionaryPath), "UTF-8"));
+        cores.remove("");
+
+        Set<String> others = Sets.newHashSet(FileUtils.readLines(new File(otherDictionaryPath), "UTF-8"));
+        others.remove("");
+
+        // 品牌
+        System.out.println("=======>品牌<========");
+        Sets.intersection(brands, corps).stream().forEach(System.out::println);
+        Sets.intersection(brands, specs).stream().forEach(System.out::println);
+        Sets.intersection(brands, dosages).stream().forEach(System.out::println);
+        Sets.intersection(brands, cores).stream().forEach(System.out::println);
+        Sets.intersection(brands, others).stream().forEach(System.out::println);
+
+        // 企业
+        System.out.println("=======>企业<========");
         Sets.intersection(corps, brands).stream().forEach(System.out::println);
         Sets.intersection(corps, specs).stream().forEach(System.out::println);
         Sets.intersection(corps, dosages).stream().forEach(System.out::println);
+        Sets.intersection(corps, cores).stream().forEach(System.out::println);
+        Sets.intersection(corps, others).stream().forEach(System.out::println);
 
+        // 规格
+        System.out.println("=======>规格<========");
+        Sets.intersection(specs, brands).stream().forEach(System.out::println);
+        Sets.intersection(specs, corps).stream().forEach(System.out::println);
+        Sets.intersection(specs, dosages).stream().forEach(System.out::println);
+        Sets.intersection(specs, cores).stream().forEach(System.out::println);
+        Sets.intersection(specs, others).stream().forEach(System.out::println);
 
-//        Sets.intersection(specs, brands).stream().forEach(System.out::println);
-//        Sets.intersection(specs, corps).stream().forEach(System.out::println);
-//        Sets.intersection(specs, dosages).stream().forEach(System.out::println);
+        // 核心
+        System.out.println("=======>核心<========");
+        Sets.intersection(cores, brands).stream().forEach(System.out::println);
+        Sets.intersection(cores, corps).stream().forEach(System.out::println);
+        Sets.intersection(cores, dosages).stream().forEach(System.out::println);
+        Sets.intersection(cores, specs).stream().forEach(System.out::println);
+        Sets.intersection(cores, others).stream().forEach(System.out::println);
 
     }
 
-    // =============================================================================================================
-
-    /**
-     * 处理词典Excel
-     */
     @Test
-    public void dealBrandDictionaryExcel() {
+    public void dealDictionaryDuplicate() throws IOException {
         /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的品牌_2024_04_07.xlsx";
+        String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";
+        String corpDictionaryPath = "data/xyy/dictionary/corp.original.txt";
+        String specDictionaryPath = "data/xyy/dictionary/spec.original.txt";
+        String dosageDictionaryPath = "data/xyy/dictionary/dosage.original.txt";
 
-        /* 备份 */
-        XyyDrugCorpusDictionaryExcelOperator.backup(dictionaryExcelPath);
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("品牌词典Excel没有数据，终止");
-            return;
+        {
+            // 删除不是品牌的词
+            List<String> originalBrands = FileUtils.readLines(new File(brandDictionaryPath), "UTF-8");
+            Set<String> notBrandSet = Sets.newHashSet("中西制药","安琪胶业","福广制药","莱美药业","海德药业","费森尤斯卡比","成都倍特","瑞阳制药","力生制药","华晟制药","山东鲁抗","佳泰制药","川眉药业","海鲸药业","崇光药业","金华隆制药","中辰药业","逸云医药","松龄堂中药","苗德堂药业","云南养尊堂","国润制药","武汉华珍","吉凯药业","诺华制药","华奥药业","医创药业","德成制药","古蔺宏安","药友制药","恒生制药","鲁药制药","天成药业","天龙药业","江苏鹏鹞","国源国药","桂林红会","鸿博药业","济邦药业","人福药业","金丝利药业","上海新亚","和黄药业","青峰药业","同和春药业","普元药业","永基药业","先声","山西华康","中诺药业","颐和药业","亚宝药业","京新药业","珠海同源","斯威药业","龟鹿药业","天方","泰升药业","江西草珊瑚","东格尔","欧意药业","金柯制药","万汉制药","开封制药","洛阳紫光","益欣药业","邦克实业","澳迩药业","华辰制药","美优制药","俊宏药业","金芝堂药业","仁和堂","灵源药业","福建古田","白鹿制药","融昱药业","维威制药","粤东药业","东乐制药","济生制药","涛生制药","良方制药","南国药业","维吾尔药业","正方制药","华仁药业","合瑞制药","金汇药业","天衡制药","全康药业","众腾药业","汉唐制药","京丰制药","千方中药","悦兴药业","福建广生堂","上海青平","韩美药品","天瑞","雪樱花制药","宝太生物科技","天生","施美药业","贵州苗彝","乐声药业","良福制药","百盛药业","山海中药","建昌帮","纽斯葆广赛","仁心药业","河北国金","保定迈卓","全宇制药","北京益民","草珊瑚药业","助邦科技","江波制药","和明制药","白云山汤阴东泰","卫华药业","科伦制药","迪龙制药","手心制药","百科亨迪","雪山七草","中兴药业","保金药业","三真药业","三九药业","鸿烁制药","山西同达","维康药业","武汉五景","明华制药","三诚实业","凯程医药","罗浮山国药","澳洲雀巢Nestle","时珍制药","长江药业","品先实业","通园制药","菲德力制药","万辉制药","欧化","北京京丰","华泰药业","爱民药业","郑州凯利","康维德","荷普药业","诺安药业","广康药业","吉林福辉","中法制药","康缘药业","惠州市中药厂","红岩药业","双鹭药业","百正药业","胜合制药","山东益康","云南七丹","万方制药","双吉制药","弘腾药业","普德药业","赛灵药业","福建同安堂","库尔科技","诺捷制药","华润赛科","和田维吾尔","豫章药业","青平药业","南阳艾美","晨光药业","抚顺青松","天润药业","广州康和药业","益康药业","高邈药业","知原药业","云南向辉","仁康药业","依科制药","太宝制药","金鸿药业","黄海制药","禾泰药业","天津同仁堂","江苏飞马","柏林药业","可为实业","南京海辰","石家庄四药","同达药业","德国拜耳","全泰药业","天德制药","心意药业","盛林药业","药王集团","万森制药","浙江鼎泰","安徽城市","河北东风","明珠药业","健民药业","丹东医创","润德药业","红桃开","唐山集川","道君药业","万泽药业","大亚制药","蓝天药业","祥芝药业","雪山七草医药","一方制药","金水宝制药","重庆天致","上海松华","扬州制药","成都锦华","金龙药业","千海兴龙旗舰店","九阳药业","浙江医药","利君制药","三晋药业","太康海恩","贝参药业","安徽仁和","华仁","汉方药业","康华卫材","中药制药","绿叶制药","九郡药业","康乐药业","津升制药","吉贝尔药业","上海朝晖","浙江新光","田田药业","特瑞药业","药牛中药","长泰药业","国正药业","民济药业","金峰制药","祥禾卫材","尔康制药","弘森药业","瑞龙制药","金诃藏药","九势制药","湖南洞庭","白云山盈康药业","海鹤药业","天津宏仁堂","丹东药业","中大药业","康嘉药业","广东南国","万通药业","美欣制药","国光药业","众妙药业","湘雅制药","鲁抗医药","阳光药业","永丰药业","永宁药业","长坤科技","爱心药业","北方药业","华南药业","世彪药业","湖南科伦制药","南京同仁堂生物科技有限公司","中华药业","宇妥藏药","通化久铭","旭阳药业","淘儿宁药械","名客刷业","正大天晴药业","恒诚制药","环球","华康卫材","迪康药业","江西中正","振兴制药","拜耳","川奇药业","贵州威利德","抚松制药","百善药业","幸福医药","汇中制药","集川药业","贵州宏宇","四药制药","滕王阁药业","森科药业","广西泰嵘","沈阳红药集团","天目药业","固康药业","永康药业","维和药业","现代制药","中新药业","田美药业","大连汉方","双鹤药业","特研药业","华威药业","旭峰药业","庚贤堂制药","厚捷制药","康和药业","良辉药业","盛安堂药业","红林制药","宛东药业","宏大药业","云南云河","百利药业","科鹏电子","众生药业","大冢制药","新华制药","通化振霖","遂成药业","华北制药","中蒙制药","海天制药","华润双鹤","东阳光药业","恒康药业","太洋药业","益翔药业","齐云卫材","中药四厂","大连盛泓","扬州中宝","红瑞制药","燕兴药业","海斯制药","希力药业","武汉健民","红蝶新材料","普爱药业","千海兴龙","御嘉药业","力康药业","美图制药","逢春制药","东方丝路医纺","皓博药业","山东胜利","康迪药械","保利制药","普康药业","德致制药","蒙药","润都制药","明德药业","通化百信","海纳制药","通化斯威","同方药业","河北维格拉","天方药业","汉盛药业","福康药业","上海凯宝","一格制药","齐都药业","怀仁制药","奥生科技","华联","青襄药业","健峰药业","安阳九州","和硕药业","东陵药业","华润赛科药业","锦瑞制药","云南圣科","石家庄康力","西安北方","成都迪康","西南药业","岷海制药","正大青春宝","中南制药","九连山药业","承开中药","广信药业","天致药业","盛翔制药","天瑞药业","通化白山","杭州民生","海恩药业","新亚","苏州弘森","海洲药业","浙江泰利森","新华达制药","云鹏医药","金恒制药","源瑞制药","天津金耀","纽兰药业","海沣药业","信谊药厂","海悦药业","多多药业","仁和制药","三九全康药业","隆信制药","石药集团","中宝药业","北大医药","英科医疗","春柏药业","迪耳药业","联谊药业","一力制药");
+            notBrandSet.addAll(Sets.newHashSet("大洋制药","医大药业","植物药业","天生药业","鲁银药业","九典制药","华侨药业","辽宁天龙","沈阳红药","东风药业","立健药业","承德天原","中孚药业","嘉应制药","中族中药","大别山药业","精华制药","贵阳新天","南京海鲸","昊森药业","永安制药","汇元药业","长生药业","南京老山","九方制药","亿友药业","倍特药业","百澳药业","湖北虎泉","宝芝林药业","正恒药业","碑林药业","云南裕丰","康福药业","在田药业","紫金药业","新生制药","永宁制药","华信制药","金宝药业","卓宇制药","四川启隆","兰药药业","力强药业","白医制药","绿丹药业","紫光制药","海王药业","正达药业","仁民药业","古田药业","同药集团","康芝药业","万东药业","广东一力","李众胜堂","健之源","新辉药业","本草制药","一品制药","宝龙","华润三九","广承药业","万高药业","北京福元","隆泰制药","祯杨家","东新药业","琨腾药业","云鹏制药","宝珠制药","松辽制药","万岁药业","北陆药业","万禾制药","常州康普","瑞华制药","丰原药业","万杰制药","瑶铭药业","三药制药","仙琚制药","兰太药业","红星药业","华夏药材","万德制药","云南良方","路坦制药","锦华药业","通化利民","云南植物","百正","滇中药业","实正药业","东阿阿华医疗","弘景药业","江西汪氏","心康制药","英太制药","亚太药业","天之海药业","五盛药业集团","环球药业","福辉药业","荷花池药业","赤峰万泽","创美实业","君山制药","四川科伦","南昌卫材","金石制药","比智高","金耀药业","林宝药业","大恩药业","神龙药业","包头中药","天山药业","青云山药业","石家庄北方","中杰药业","山西太行","广康","美罗药业","万润药业","管城制药","国草药业","诺成药业","康奇","成都亨达","万康","中科利君","蒙欣药业","第一制药","金页制药","天力药业","弘升药业","江西制药","银谷制药","邵阳神农","百神药业","亿帆药业","西峰制药","天植中药","金发科技","华中药业","太行药业","深大药业","普阳药业","鑫瑞药业","林恒制药","罗邦药业","三普","山西天致","遂成","亳州花玉颜","汉晨药业","可济药业","泰复制药","赛诺制药","兰茂药业","五景药业","红石药业","江西民济","中药六厂","百康药业","众志药业","昊骏药业","民康制药","天生制药","康普药业","乐普","天宝药业","贵州飞云岭","天原药业","华源制药","邯郸制药","浙江都邦","常乐制药","祥瑞药业","东方药业","恒生药业","威门药业","江苏长江","胜光药业","孚众药业","振东制药","莉君药业","东宝药业","九州药业","正大制药","山西太原","新亚药业","润华药业","泓圃药业","汾河制药","昊邦制药","广誉远国药","浙江惠迪森","辉成药业","科顿制药","正通药业","白云山制药","都邦药业","中盛药业","白山药业","扬子江药业","宜昌人福","飞龙药业","奥林特药业","国宏药业","天台山制药","光正制药","赛卓药业","归正药业","众康","紫竹药业","迈迪制药","宛西制药","天然药业","新功药业","海山药业","奇力制药","东海药业","以德制药","恒新药业","悦康药业","蜀中药业","振兴中药","朗宏实业","江西钟山","华西制药","颐生药业","云南国鹤","虎泉药业","吉林真元","德成","华药药业","金马药业","上锦制药","智慧脸","国药集团天目湖","万玮制药","仙河药业","大安制药","安徽宏业"));
+            originalBrands = originalBrands.stream().filter(item -> {
+                if (StringUtils.isNotEmpty(item) && notBrandSet.contains(item)) {
+                    return false;
+                }
+                return true;
+            }).collect(Collectors.toList());
+            File dictionaryFile = new File(brandDictionaryPath);
+            FileUtils.writeLines(dictionaryFile, originalBrands);
         }
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            rowDTO.setRealDictionary(this.tryParseBrand(rowDTO.getDictionary()));
-        }
 
-        // 写Excel
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(rowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(dictionaryExcelPath, excelRows);
-        log.debug("处理品牌词典Excel，成功。");
     }
 
-    private String tryParseBrand(String brand) {
-        brand = this.replaceSpecialChar(brand);
-        if (StringUtils.isEmpty(brand)) {
-            return "";
-        }
-        if (excludeBrands.contains(brand)) {
-            return "";
-        }
-        if (specialBrandMap.containsKey(brand)) {
-            return specialBrandMap.get(brand);
-        }
-        Matcher matcher = brandRegex.matcher(brand);
-        boolean isMatch = matcher.find();
-        if (!isMatch) {
-            return brand;
-        } else {
-            return matcher.group(1).trim();
-        }
+    @Test
+    public void makeDictionary() throws IOException {
+        makeBrandDictionary();
+        makeDosageDictionary();
+        makeCorpDictionary();
+        makeSpecDictionary();
+        makeCoreDictionary();
+        makeOtherDictionary();
     }
 
-    /**
-     * 制作词典
-     */
     @Test
     public void makeBrandDictionary() throws IOException {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的品牌_2024_04_07.xlsx";
-        String dictionaryPath = "data/xyy/dictionary/brand.original.txt";
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("品牌词典Excel没有数据，终止");
-            return;
-        }
-
-        Set<String> brands = this.listBrands(rowDTOS);
-        File dictionaryFile = new File(dictionaryPath);
-        FileUtils.writeLines(dictionaryFile, brands);
-        log.info("制作词典成功：{}", dictionaryPath);
-    }
-
-    private Set<String> listBrands(List<XyyDrugCorpusDictionaryRowDTO> rowDTOS) {
-        Set<String> brands = Sets.newHashSetWithExpectedSize(rowDTOS.size());
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            if (Objects.nonNull(rowDTO) && StringUtils.isNotEmpty(rowDTO.getRealDictionary())) {
-                brands.add(rowDTO.getRealDictionary());
-            }
-        }
-        return brands;
-    }
-
-    @Test
-    public void dealBrandDictionary() throws IOException {
         /* 可变参数 */
         String originalDictionaryPath = "data/xyy/dictionary/brand.original.txt";
         String dictionaryPath = "data/xyy/dictionary/brand.txt";
@@ -224,7 +130,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
 
         List<String> resultBrands = Lists.newArrayListWithExpectedSize(originalBrands.size());
         for (String originalBrand : originalBrands) {
-            originalBrand = replaceSpecialChar(originalBrand);
+            originalBrand = XyyDrugCorpusUtils.replaceSpecialChar(originalBrand);
             if (StringUtils.isNotEmpty(originalBrand)) {
                 resultBrands.add(originalBrand);
                 // 化繁为简、大写转小写，全角转半角。
@@ -243,103 +149,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
     }
 
     @Test
-    public void checkBrandDictionary() throws IOException {
-        new DynamicCustomDictionary().reload();
-
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的展示名称和通用名称_2024_04_02.xlsx";
-
-        /* 可变参数 */
-        String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";
-        String corpDictionaryPath = "data/xyy/dictionary/corp.original.txt";
-
-        Set<String> corps = Sets.newHashSet(FileUtils.readLines(new File(corpDictionaryPath), "UTF-8"));
-        // 加载brand词典
-        List<String> brands = FileUtils.readLines(new File(brandDictionaryPath), "UTF-8");
-
-        Set<String> brandSet = brands.stream().filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
-        Set<String> corpSet = corps.stream().filter(StringUtils::isNotEmpty).collect(Collectors.toSet());
-
-        Set<String> duplicateWords = Sets.newHashSet();
-        for (String brand : brands) {
-            if (StringUtils.isNotEmpty(brand) && corps.contains(brand)) {
-                duplicateWords.add(brand);
-            }
-        }
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典Excel没有数据，终止");
-            return;
-        }
-        Set<String> topQueryKeywords = Sets.newHashSet("感冒灵");
-//        Set<String> topQueryKeywords = Sets.newHashSet("感冒灵", "枇杷", "阿莫西林");
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典没有数据，终止");
-            return;
-        }
-        Set<String> natureSet = Arrays.stream(XyyNatureEnum.values()).map(XyyNatureEnum::toString).collect(Collectors.toSet());
-
-        List<XyyDrugCorpusDictionaryRowDTO> resultRowDTOS = Lists.newArrayListWithExpectedSize(16);
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            for (String topQueryKeyword : topQueryKeywords) {
-                rowDTO.setDictionary(replaceSpecialChar(rowDTO.getDictionary()));
-                if (rowDTO.getDictionary().contains(topQueryKeyword)) {
-                    List<Term> terms = newSegment.seg(rowDTO.getDictionary());
-                    List<String> termStrList = terms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                        return term.word + "/" + term.nature.toString();
-                    }).collect(Collectors.toList());
-                    rowDTO.setRealDictionary(String.join(" ", termStrList));
-
-                    List<Term> indexTerms = newIndexSegment.seg(rowDTO.getDictionary());
-                    List<String> indexTermStrList = indexTerms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                        return term.word + "/" + term.nature.toString();
-                    }).collect(Collectors.toList());
-                    rowDTO.setRealDictionary2(String.join(" ", indexTermStrList));
-                    resultRowDTOS.add(rowDTO);
-//                    log.info("关键词【{}】，【{}】分词：{}", topQueryKeyword, rowDTO.getDictionary(), newSegment.seg(rowDTO.getDictionary()).toString());
-                }
-            }
-        }
-        // 写Excel
-        String resultDictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的展示名称和通用名称_2024_04_02_result.xlsx";
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(resultRowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(resultDictionaryExcelPath, excelRows);
-        log.debug("处理词典Excel，成功。");
-    }
-    // ====================================================================================================
-
-    /**
-     * 制作词典
-     */
-    @Test
     public void makeDosageDictionary() throws IOException {
-        /* 可变参数 */
-        String dictionaryText = "片剂,普通片,片,分散片,咀嚼片,肠溶片,缓释片,控释片,口腔崩解片,胶囊,硬胶囊,软胶囊,肠溶胶囊,肠溶软胶囊,缓释胶囊,控释胶囊,颗粒,缓释颗粒,控释颗粒,混悬液,干混悬剂,口服溶液剂,口服溶液,合剂,口服液,糖浆剂,散剂,粉剂,滴丸剂,滴丸,丸剂,丸,酊剂,煎膏剂,煎膏,膏滋,膏滋,酒剂,注射液,注射用无菌粉末,冻干粉针剂,软膏剂,软膏,乳膏剂,乳膏,凝胶剂,凝胶,外用溶液剂,外用溶液,胶浆剂,胶浆,贴膏剂,贴膏,橡胶膏剂,橡胶膏,膏药,酊剂,洗剂,涂剂,散剂,冻干粉,气雾剂,雾化溶液剂,雾化溶液,吸入溶液剂,吸入溶液,吸入粉雾剂,喷雾剂,鼻喷雾剂,灌肠剂,滴眼剂,眼膏剂,滴剂,滴鼻剂,滴耳剂,栓剂,阴道片,阴道泡腾片,阴道软胶囊";
-        String dictionaryPath = "data/xyy/dictionary/dosage.original.txt";
-
-        String[] dosageArray = dictionaryText.split(",");
-        Set<String> dosages = Sets.newHashSetWithExpectedSize(dosageArray.length);
-        for (String dosage : dosageArray) {
-            dosage = this.replaceSpecialChar(dosage);
-            if (StringUtils.isNotEmpty(dosage)) {
-                dosages.add(dosage);
-            }
-        }
-        File dictionaryFile = new File(dictionaryPath);
-        FileUtils.writeLines(dictionaryFile, dosages);
-        log.info("制作词典成功：{}", dictionaryPath);
-    }
-
-    @Test
-    public void dealDosageDictionary() throws IOException {
         /* 可变参数 */
         String originalDictionaryPath = "data/xyy/dictionary/dosage.original.txt";
         String dictionaryPath = "data/xyy/dictionary/dosage.txt";
@@ -349,7 +159,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
 
         List<String> resultDosages = Lists.newArrayListWithExpectedSize(originalDosages.size());
         for (String originalDosage : originalDosages) {
-            originalDosage = replaceSpecialChar(originalDosage);
+            originalDosage = XyyDrugCorpusUtils.replaceSpecialChar(originalDosage);
             if (StringUtils.isNotEmpty(originalDosage)) {
                 resultDosages.add(originalDosage);
                 // 化繁为简、大写转小写，全角转半角。
@@ -366,385 +176,9 @@ public class XyyDrugCorpusMakeDictionaryTask {
         File dictionaryFile = new File(dictionaryPath);
         FileUtils.writeLines(dictionaryFile, resultDosages);
     }
-// ====================================================================================================
-    /**
-     * 处理词典Excel
-     */
-    @Test
-    public void dealCorpDictionaryExcel() {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的店铺展示名称&厂商_2024_04_02.xlsx";
 
-        // 仅仅使用默认自定义词典，避免领域数据干扰行政区域数据。
-        DynamicCustomDictionary dictionary = new DynamicCustomDictionary("data/dictionary/custom/CustomDictionary.txt");
-        dictionary.reload();
-        newSegment.enableCustomDictionary(dictionary);
-
-        /* 备份 */
-        XyyDrugCorpusDictionaryExcelOperator.backup(dictionaryExcelPath);
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("店铺名称&厂商名称词典Excel没有数据，终止");
-            return;
-        }
-
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            rowDTO.setRealDictionary(this.tryParseCorp(rowDTO.getDictionary()));
-        }
-
-        // 写Excel
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(rowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(dictionaryExcelPath, excelRows);
-        log.debug("处理店铺名称&厂商名称词典Excel，成功。");
-
-        // 还原自定义词典配置
-        new DynamicCustomDictionary().reload();
-    }
-
-    private String tryParseCorp(String original) {
-        original = this.replaceSpecialChar(original);
-        if (StringUtils.isEmpty(original)) {
-            return "";
-        }
-        if (excludeCorps.contains(original)) {
-            return "";
-        }
-        if (specialCorpMap.containsKey(original)) {
-            return specialCorpMap.get(original);
-        }
-        for (String replaceCorpPrefix : removeCorpPrefixSet) {
-            if (original.startsWith(replaceCorpPrefix)) {
-                original = original.replace(replaceCorpPrefix, "");
-            }
-        }
-        // TODO 处理末尾带有.. 或 .
-
-        if (StringUtils.isEmpty(original)) {
-            return "";
-        }
-        // 判断是否是 原
-        List<String> corps = Lists.newArrayListWithExpectedSize(16);
-        Pattern parsePattern = Pattern.compile("^(.*?)有限公司原公司名(.*)$");
-        Matcher matcher = parsePattern.matcher(original);
-        boolean isMatch = matcher.find();
-        if (isMatch) {
-            // 全称
-            corps.add(original);
-            // 第一个
-            tryParseSimpleCorp(matcher.group(1)+"有限公司").forEach(item -> corps.add(item));
-            // 第二个
-            tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-        } else {
-            parsePattern = Pattern.compile("^(.*?)有限公司原名(.*)$");
-            matcher = parsePattern.matcher(original);
-            isMatch = matcher.find();
-            if (isMatch) {
-                // 全称
-                corps.add(original);
-                // 第一个
-                tryParseSimpleCorp(matcher.group(1)+"有限公司").forEach(item -> corps.add(item));
-                // 第二个
-                tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-            } else {
-                parsePattern = Pattern.compile("^(.*?)有限公司原(.*)$");
-                matcher = parsePattern.matcher(original);
-                isMatch = matcher.find();
-                if (isMatch) {
-                    // 全称
-                    corps.add(original);
-                    // 第一个
-                    tryParseSimpleCorp(matcher.group(1)+"有限公司").forEach(item -> corps.add(item));
-                    // 第二个
-                    tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                } else {
-                    parsePattern = Pattern.compile("^(.*?)有限责任公司原公司名(.*)$");
-                    matcher = parsePattern.matcher(original);
-                    isMatch = matcher.find();
-                    if (isMatch) {
-                        // 全称
-                        corps.add(original);
-                        // 第一个
-                        tryParseSimpleCorp(matcher.group(1)+"有限责任公司").forEach(item -> corps.add(item));
-                        // 第二个
-                        tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                    } else {
-                        parsePattern = Pattern.compile("^(.*?)有限责任公司原名(.*)$");
-                        matcher = parsePattern.matcher(original);
-                        isMatch = matcher.find();
-                        if (isMatch) {
-                            // 全称
-                            corps.add(original);
-                            // 第一个
-                            tryParseSimpleCorp(matcher.group(1)+"有限责任公司").forEach(item -> corps.add(item));
-                            // 第二个
-                            tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                        } else {
-                            parsePattern = Pattern.compile("^(.*?)有限责任公司原(.*)$");
-                            matcher = parsePattern.matcher(original);
-                            isMatch = matcher.find();
-                            if (isMatch) {
-                                // 全称
-                                corps.add(original);
-                                // 第一个
-                                tryParseSimpleCorp(matcher.group(1)+"有限责任公司").forEach(item -> corps.add(item));
-                                // 第二个
-                                tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                            } else {
-                                // 委托
-                                parsePattern = Pattern.compile("^(.*?)有限公司委托(.*)$");
-                                matcher = parsePattern.matcher(original);
-                                isMatch = matcher.find();
-                                if (isMatch) {
-                                    // 全称
-                                    corps.add(original);
-                                    // 第一个
-                                    tryParseSimpleCorp(matcher.group(1)+"有限公司").forEach(item -> corps.add(item));
-                                    // 第二个
-                                    tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                                } else {
-                                    // 委托
-                                    parsePattern = Pattern.compile("^(.*?)有限责任公司委托(.*)$");
-                                    matcher = parsePattern.matcher(original);
-                                    isMatch = matcher.find();
-                                    if (isMatch) {
-                                        // 全称
-                                        corps.add(original);
-                                        // 第一个
-                                        tryParseSimpleCorp(matcher.group(1)+"有限责任公司").forEach(item -> corps.add(item));
-                                        // 第二个
-                                        tryParseSimpleCorp(matcher.group(2)).forEach(item -> corps.add(item));
-                                    } else {
-                                        tryParseSimpleCorp(original).forEach(item -> corps.add(item));
-                                    }
-                                }
-                            }
-                        }
-                    }
-                }
-            }
-        }
-        return String.join(" ", corps.stream().distinct().collect(Collectors.toList()));
-    }
-
-    private List<String> tryParseSimpleCorp(String original) {
-        if (StringUtils.isEmpty(original)) {
-            return Lists.newArrayList();
-        }
-        List<Pattern> parsePatterns = this.tryGetParsePatterns(original);
-        if (CollectionUtils.isEmpty(parsePatterns)) {
-            return Lists.newArrayList();
-        }
-        List<String> corps = Lists.newArrayListWithExpectedSize(16);
-        // 全称
-        corps.add(original);
-        for (Pattern parsePattern : parsePatterns) {
-            Matcher matcher = parsePattern.matcher(original);
-            boolean isMatch = matcher.find();
-            if (isMatch) {
-                int groupCount = matcher.groupCount();
-                StringBuilder stringBuilder = new StringBuilder();
-                for (int i = 1; i <= groupCount; i++) {
-                    String group = matcher.group(i);
-                    if (Objects.nonNull(group)) {
-                        stringBuilder.append(group);
-                    }
-                }
-                corps.add(stringBuilder.toString());
-            }
-        }
-        return corps;
-    }
-
-    private List<Pattern> tryGetParsePatterns(String original) {
-        List<Pattern> parsePatterns = Lists.newArrayListWithExpectedSize(16);
-        Set<String> areas = Sets.newHashSet(this.tryParseCorpAreas(original));
-        Pattern parsePattern;
-        parsePattern = this.getParseCorpPattern1(areas);
-        if (Objects.nonNull(parsePattern)) {
-            parsePatterns.add(parsePattern);
-        }
-        parsePattern = this.getParseCorpPattern2(areas);
-        if (Objects.nonNull(parsePattern)) {
-            parsePatterns.add(parsePattern);
-        }
-        parsePattern = this.getParseCorpPattern3(areas);
-        if (Objects.nonNull(parsePattern)) {
-            parsePatterns.add(parsePattern);
-        }
-        parsePattern = this.getParseCorpPattern4(areas);
-        if (Objects.nonNull(parsePattern)) {
-            parsePatterns.add(parsePattern);
-        }
-        return parsePatterns;
-    }
-
-    private List<String> tryParseCorpAreas(String original) {
-        original = this.replaceSpecialChar(original);
-        if (StringUtils.isEmpty(original)) {
-            return null;
-        }
-        List<Term> terms = newSegment.seg(original);
-//        log.info("分词：{}", terms.toString());
-        return terms.stream().map(term -> {
-            if (Objects.equals(term.nature, Nature.ns)) {
-                return term.word;
-            }
-            return null;
-        }).filter(StringUtils::isNotEmpty).collect(Collectors.toList());
-    }
-
-    private Pattern getParseCorpPattern1(Set<String> areas) {
-        StringBuilder pattern = new StringBuilder();
-        pattern.append("^");
-        if (CollectionUtils.isNotEmpty(areas)) {
-            pattern.append("(");
-            pattern.append(String.join("|", areas));
-            pattern.append("){0,1}");
-        }
-        pattern.append("(.+?)(医疗器械|医药物流|医药工业|保健品|保健食品|健康管理|贸易|自营|集团|医药科技|生物科技|医药药材|医药|药业|科技){0,1}(?:有限公司|旗舰店|有限责任公司|股份有限公司){0,1}$");
-//        log.info("解析店铺名称&厂商名称的正则表达式：{}", pattern);
-        return Pattern.compile(pattern.toString());
-    }
-
-    private Pattern getParseCorpPattern2(Set<String> areas) {
-        StringBuilder pattern = new StringBuilder();
-        pattern.append("^");
-        if (CollectionUtils.isNotEmpty(areas)) {
-            pattern.append("(");
-            pattern.append(String.join("|", areas));
-            pattern.append("){0,1}");
-        }
-        pattern.append("(.+?)(?:医疗器械|医药物流|医药工业|保健品|保健食品|健康管理|贸易|自营|集团|医药科技|生物科技|医药药材|医药|药业|科技){0,1}(?:有限公司|旗舰店|有限责任公司|股份有限公司){0,1}$");
-//        log.info("解析店铺名称&厂商名称的正则表达式：{}", pattern);
-        return Pattern.compile(pattern.toString());
-    }
-
-    private Pattern getParseCorpPattern3(Set<String> areas) {
-        StringBuilder pattern = new StringBuilder();
-        pattern.append("^");
-        if (CollectionUtils.isNotEmpty(areas)) {
-            pattern.append("(?:");
-            pattern.append(String.join("|", areas));
-            pattern.append("){0,1}");
-        }
-        pattern.append("(.+?)(医疗器械|医药物流|医药工业|保健品|保健食品|健康管理|贸易|自营|集团|医药科技|生物科技|医药药材|医药|药业|科技){0,1}(?:有限公司|旗舰店|有限责任公司|股份有限公司){0,1}$");
-//        log.info("解析店铺名称&厂商名称的正则表达式：{}", pattern);
-        return Pattern.compile(pattern.toString());
-    }
-
-    private Pattern getParseCorpPattern4(Set<String> areas) {
-        StringBuilder pattern = new StringBuilder();
-        pattern.append("^");
-        if (CollectionUtils.isNotEmpty(areas)) {
-            pattern.append("(?:");
-            pattern.append(String.join("|", areas));
-            pattern.append("){0,1}");
-        }
-        pattern.append("(.+?)(医疗器械|医药物流|医药工业|保健品|保健食品|健康管理|贸易|自营|集团|医药科技|生物科技|医药药材|医药|药业|科技){0,1}(有限公司|旗舰店|有限责任公司|股份有限公司){0,1}$");
-//        log.info("解析店铺名称&厂商名称的正则表达式：{}", pattern);
-        return Pattern.compile(pattern.toString());
-    }
-
-    /**
-     * 制作词典
-     */
     @Test
     public void makeCorpDictionary() throws IOException {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的店铺展示名称&厂商_2024_04_02.xlsx";
-        String dictionaryPath = "data/xyy/dictionary/corp.original.txt";
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("品牌词典Excel没有数据，终止");
-            return;
-        }
-
-        List<String> corps = this.listCorps(rowDTOS);
-
-        File dictionaryFile = new File(dictionaryPath);
-        FileUtils.writeLines(dictionaryFile, corps);
-        log.info("制作词典成功：{}", dictionaryPath);
-    }
-
-    private List<String> listCorps(List<XyyDrugCorpusDictionaryRowDTO> rowDTOS) {
-        List<String> corps = Lists.newArrayListWithExpectedSize(rowDTOS.size());
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            if (Objects.nonNull(rowDTO) && StringUtils.isNotEmpty(rowDTO.getRealDictionary())) {
-                String[] words = rowDTO.getRealDictionary().split(" ");
-                for (String word : words) {
-                    corps.add(word);
-                }
-                corps.add("\n");
-            }
-        }
-        return corps;
-    }
-
-    @Test
-    public void testParseSpecialCorp() {
-        /* 可变参数 */
-        List<String> originalCorps = Lists.newArrayList("上海名流卫生用品股份有限公司原上海名邦橡胶制品有限公司","上海名流卫生用品股份有限公司原上海名邦橡胶制品有限公司","","","","","","稳健平安医疗科技湖南有限公司原湖南平安医械科技有限公司","稳健平安医疗科技湖南有限公司原湖南平安医械科技有限公司","","","四川科瑞德制药股份有限公司原四川科瑞德制药有限公司","四川科瑞德制药股份有限公司原四川科瑞德制药有限公司","","","","","","","","","","辽宁海一制药有限公司原辽宁亿邦制药有限公司","辽宁海一制药有限公司原辽宁亿邦制药有限公司","","","","石药控股集团河北唐威药业有限公司原石药集团河北唐威药业有限公司","石药控股集团河北唐威药业有限公司原石药集团河北唐威药业有限公司","","","","","河北唐威药业有限公司原石药控股集团河北唐威药业有限公司","河北唐威药业有限公司原石药控股集团河北唐威药业有限公司","","","","","","浙江国光生物制药股份有限公司原浙江国光生物制药有限公司","浙江国光生物制药股份有限公司原浙江国光生物制药有限公司","","","","","","四川峨嵋山药业有限公司原四川峨嵋山药业股份有限公司","四川峨嵋山药业有限公司原四川峨嵋山药业股份有限公司","","","","","","武汉璟泓科技股份有限公司原武汉璟泓万方堂医药科技股份有限公司","武汉璟泓科技股份有限公司原武汉璟泓万方堂医药科技股份有限公司","","","","","回春堂药业股份有限公司原湖南省回春堂药业有限公司","回春堂药业股份有限公司原湖南省回春堂药业有限公司","","","","","","欧化药业香港有限公司原欧化药业有限公司","欧化药业香港有限公司原欧化药业有限公司","","","","","扬子江药业集团江苏龙凤堂中药有限公司原扬子江药业集团有限公司","扬子江药业集团江苏龙凤堂中药有限公司原扬子江药业集团有限公司","","","","","","广东葛仙堂健康股份有限公司原博罗罗浮山双梅爽保健食品有限公司","广东葛仙堂健康股份有限公司原博罗罗浮山双梅爽保健食品有限公司","","","","","","江西瑞博保健食品有限公司原江西瑞博食品有限公司","江西瑞博保健食品有限公司原江西瑞博食品有限公司","","","","","","衡水恒康医疗器材有限责任公司原冀州市恒康医疗器材有限责任公司","衡水恒康医疗器材有限责任公司原冀州市恒康医疗器材有限责任公司","","","","","","","武汉时珍要方医药科技有限公司原武汉时珍要方卫生品有限公司","武汉时珍要方医药科技有限公司原武汉时珍要方卫生品有限公司","","","","","四川宝鉴堂药业有限公司原四川升和药业股份有限公司","四川宝鉴堂药业有限公司原四川升和药业股份有限公司","","","","安徽三九全康药业有限公司原太和县三九全康生物科技有限公司","安徽三九全康药业有限公司原太和县三九全康生物科技有限公司","","","","","江西沃华济顺医药有限公司原南昌济顺制药有限公司","江西沃华济顺医药有限公司原南昌济顺制药有限公司","","","","江西苗仁堂生物科技有限公司原永丰苗仁堂生物科技有限公司","江西苗仁堂生物科技有限公司原永丰苗仁堂生物科技有限公司","","","","广东国源国药制药有限公司原深圳国源国药有限公司","广东国源国药制药有限公司原深圳国源国药有限公司","","","","江西齐仁堂中药饮片有限公司原江西樟树葛玄药饮片有限公司","江西齐仁堂中药饮片有限公司原江西樟树葛玄药饮片有限公司","","","","","西班牙SiegfriedBarberaS.L.原西班牙NovartisFarmaceuticaS.A.","西班牙siegfriedbarberas.l.原西班牙novartisfarmaceuticas.a.","","","","","","榆林利君制药有限公司原陕西德福康制药有限公司","榆林利君制药有限公司原陕西德福康制药有限公司","","","山东卓健医疗科技股份有限公司原山东卓健医疗科技有限公司","山东卓健医疗科技股份有限公司原山东卓健医疗科技有限公司","","","上海迪赛诺医药集团股份有限公司原上海迪赛诺生物医药有限公司","上海迪赛诺医药集团股份有限公司原上海迪赛诺生物医药有限公司","","","上海自然堂集团有限公司原伽蓝集团股份有限公司","上海自然堂集团有限公司原伽蓝集团股份有限公司","","","","","天士力医药集团股份有限公司原天士力制药集团股份有限公司","天士力医药集团股份有限公司原天士力制药集团股份有限公司","","","","洛阳安普生物科技股份有限公司原洛阳市安普生物科技有限公司","洛阳安普生物科技股份有限公司原洛阳市安普生物科技有限公司","","","","津药和平天津制药有限公司原天津金耀药业有限公司","津药和平天津制药有限公司原天津金耀药业有限公司","","","","安徽盛健生物科技有限公司原厂家亳州市盛健生物科技有限公司","安徽盛健生物科技有限公司原厂家亳州市盛健生物科技有限公司","","","广州花城药业有限公司原广州市花城制药厂","广州花城药业有限公司原广州市花城制药厂","","","仁和堂药业有限公司原名山东仁和堂药业有限公司","仁和堂药业有限公司原名山东仁和堂药业有限公司","","","石家庄北方药业集团有限公司原石家庄北方药业有限公司","石家庄北方药业集团有限公司原石家庄北方药业有限公司","","","","兆科药业广州有限公司原兆科药业合肥有限公司","兆科药业广州有限公司原兆科药业合肥有限公司","","","","山西国泰中药股份有限公司原山西国泰中药饮片有限公司","山西国泰中药股份有限公司原山西国泰中药饮片有限公司","","","黑龙江诺捷制药有限责任公司原哈药集团三精制药诺捷有限责任公司","黑龙江诺捷制药有限责任公司原哈药集团三精制药诺捷有限责任公司","","","天士力医药集团股份有限公司原天士力制药集团股份有限公司","天士力医药集团股份有限公司原天士力制药集团股份有限公司","","","","","深圳大佛药业股份有限公司原深圳大佛药业有限公司","深圳大佛药业股份有限公司原深圳大佛药业有限公司","","","","广西壮族自治区花红药业集团股份公司原广西壮族自治区花红药业股份有限公司","广西壮族自治区花红药业集团股份公司原广西壮族自治区花红药业股份有限公司","","","","齐鲁安替制药有限公司原齐鲁制药有限公司","齐鲁安替制药有限公司原齐鲁制药有限公司","","","四川省通园制药集团有限公司原四川省通园制药有限公司","四川省通园制药集团有限公司原四川省通园制药有限公司","","","北京长城制药有限公司原北京长城制药厂","北京长城制药有限公司原北京长城制药厂","","","一力制药罗定有限公司原广东一力罗定制药有限公司","一力制药罗定有限公司原广东一力罗定制药有限公司","","","仁和堂药业有限公司原山东仁和堂药业有限公司","仁和堂药业有限公司原山东仁和堂药业有限公司","","","黑龙江比福金北药制药有限公司原伊春金北药制药有限公司","黑龙江比福金北药制药有限公司原伊春金北药制药有限公司","","","广州白云山医药集团股份有限公司白云山制药总厂原名广州白云山制药股份有限公司广州白云山制药总厂","广州白云山医药集团股份有限公司白云山制药总厂原名广州白云山制药股份有限公司广州白云山制药总厂","","","","沈阳清宫药业集团有限公司原沈阳康达制药集团有限公司","沈阳清宫药业集团有限公司原沈阳康达制药集团有限公司","","","石家庄北方药业集团有限公司原石家庄北方药业有限公司","石家庄北方药业集团有限公司原石家庄北方药业有限公司","","","","仙乐健康科技股份有限公司原广东仙乐制药有限公司","仙乐健康科技股份有限公司原广东仙乐制药有限公司","","","广西厚德药业有限公司原广西厚德大健康产业股份有限公司","广西厚德药业有限公司原广西厚德大健康产业股份有限公司","","","","葵花药业集团襄阳隆中有限公司原湖北襄阳隆中药业集团有限公司","葵花药业集团襄阳隆中有限公司原湖北襄阳隆中药业集团有限公司","","","","兰州和盛堂制药股份有限公司原兰州和盛堂制药有限公司","兰州和盛堂制药股份有限公司原兰州和盛堂制药有限公司","","","成都华神科技集团股份有限公司制药厂原成都泰合健康科技集团股份有限公司华神制药厂","成都华神科技集团股份有限公司制药厂原成都泰合健康科技集团股份有限公司华神制药厂","","","江西南昌桑海制药有限责任公司原江西南昌桑海制药厂","江西南昌桑海制药有限责任公司原江西南昌桑海制药厂","","","","广西吉民堂药业有限公司原广西金诺制药有限公司","广西吉民堂药业有限公司原广西金诺制药有限公司","","","","镇平时通实业有限公司原镇平时通药业有限公司","镇平时通实业有限公司原镇平时通药业有限公司","","","","江西南昌济生制药有限责任公司原江西南昌桑海制药有限责任公司","江西南昌济生制药有限责任公司原江西南昌桑海制药有限责任公司","","","健适宝上海实业有限公司原耀信电子科技上海有限公司","健适宝上海实业有限公司原耀信电子科技上海有限公司","","","","山东罗欣药业集团股份有限公司原山东罗欣药业股份有限公司","山东罗欣药业集团股份有限公司原山东罗欣药业股份有限公司","","","广西迪泰制药股份有限公司原广西迪泰制药有限公司","广西迪泰制药股份有限公司原广西迪泰制药有限公司","","","哈尔滨北星药业有限公司原哈尔滨三联药业股份有限公司","哈尔滨北星药业有限公司原哈尔滨三联药业股份有限公司","","","安徽方达药械股份有限公司原安徽方达药械有限公司","安徽方达药械股份有限公司原安徽方达药械有限公司","","","","上海上药新亚药业有限公司原上海新亚药业有限公司","上海上药新亚药业有限公司原上海新亚药业有限公司","","","","吉林隆泰制药有限责任公司原吉林隆泰制药股份有限公司","吉林隆泰制药有限责任公司原吉林隆泰制药股份有限公司","","","红云制药梁河有限公司原云南梁河民族制药有限公司","红云制药梁河有限公司原云南梁河民族制药有限公司","","","天津金耀集团河北永光制药有限公司原永光制药有限公司","天津金耀集团河北永光制药有限公司原永光制药有限公司","","","成都倍特得诺药业有限公司原四川宝鉴堂药业有限公司","成都倍特得诺药业有限公司原四川宝鉴堂药业有限公司","","","哈尔滨敷尔佳科技股份有限公司原哈尔滨北星药业有限公司","哈尔滨敷尔佳科技股份有限公司原哈尔滨北星药业有限公司","","","","哈尔滨瀚钧现代制药有限公司原哈尔滨瀚钧药业有限公司","哈尔滨瀚钧现代制药有限公司原哈尔滨瀚钧药业有限公司","","","","天津信谊津津药业有限公司原天津市津津药业有限公司","天津信谊津津药业有限公司原天津市津津药业有限公司","","","","","鼎复康药业股份有限公司原河南鼎复康药业股份有限公司","鼎复康药业股份有限公司原河南鼎复康药业股份有限公司","","","吉林福康药业股份有限公司原海南天煌制药有限公司","吉林福康药业股份有限公司原海南天煌制药有限公司","","","江西马应龙美康药业有限公司原江西禾氏美康药业有限公司","天地恒一制药股份有限公司原湖南天地恒一制药有限公司","","","","","","","","","","","","","","","","","","");
-        originalCorps = originalCorps.stream().filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
-
-        for (String originalCorp : originalCorps) {
-            System.out.println(originalCorp);
-            Pattern parsePattern = Pattern.compile("^(.*?)有限公司原(.*)$");
-            Matcher matcher = parsePattern.matcher(originalCorp);
-            boolean isMatch = matcher.find();
-            if (isMatch) {
-                System.out.println(matcher.group(1));
-                Arrays.stream(tryParseCorp(matcher.group(1)+"有限公司").split(" ")).forEach(item -> {
-                    System.out.println(item);
-                });
-                System.out.println();
-                System.out.println(matcher.group(2));
-                Arrays.stream(tryParseCorp(matcher.group(2)).split(" ")).forEach(item -> {
-                    System.out.println(item);
-                });
-
-                System.out.println();
-                System.out.println();
-                System.out.println();
-            }
-        }
-
-    }
-
-    @Test
-    public void testParseSpecialCorp2() {
-        /* 可变参数 */
-        List<String> originalCorps = Lists.newArrayList("江西今典生物科技有限公司委托江西云恩健康产业有限公司","芜湖市诺康生物科技有限公司委托浙江柏客健实业有限公司","广州市康采医疗用品有限公司委托郑州航空港区康悦生物技术有限公司","上卫中亚卫生材料江苏有限公司委托浙江汇康医药用品有限公司","山东健康药业有限公司委托山东博山制药有限公司","稳健医疗黄冈有限公司委托稳健医疗天门有限公司","脱普日用化学品中国有限公司委托景辰无锡塑业有限公司","珠海康奇有限公司委托无锡健特药业有限公司","","甘肃奇正藏药有限公司委托方西藏奇正藏药股份有限公司","东阿阿胶股份有限公司委托燕之初健康美厦门食品有限公司","南京白敬宇制药有限责任公司委托方西安杨森制药有限公司","上海上药信谊药厂有限公司委托上海新亚药业闵行有限公司","成都亿帆达生物科技有限公司委托广东源健食品有限公司","可孚医疗科技股份有限公司委托湖南可孚医疗设备有限公司","天津玉匾国健医药科技有限公司委托广东长兴生物科技股份有限公司","北京欣乐佳国际健康科技有限公司委托云南白药集团丽江药业有限公司","广州汇纳生物科技有限公司委托开平市美康泉生物科技有限公司","广州奈梵斯健康产品有限公司委托汤臣倍健股份有限公司","广州卯金氏医药科技有限公司委托湖南公信堂药业有限公司","北京纳吉兴保健食品有限公司委托安徽全康药业有限公司","振德医疗用品股份有限公司委托许昌振德医用敷料有限公司","济南胜胜药业有限公司委托山东登胜药业有限公司","稳健医疗用品股份有限公司委托山东东华医疗科技有限公司","重庆科瑞东和制药有限责任公司委托方重庆科瑞制药集团有限公司","养生堂药业有限公司委托杭州养生堂保健品有限公司","上海复沃实业有限公司委托广州清碧化妆品有限公司","海南正康药业有限公司委托广东长兴生物科技股份有限公司","青岛健康家生物科技有限公司委托杭州麦金励生物科技有限公司","浙江上药九旭药业有限公司委托格乐瑞无锡营养科技有限公司","深圳市海王健康科技发展有限公司委托杭州海王生物工程有限公司","广西邦琪药业集团有限公司委托广西百琪药业有限公司","湖北马应龙护理品有限公司委托德阳市美妆庭纸业有限公司","广州王老吉大健康产业有限公司委托贵州省潮映大健康饮料有限公司","华润三九医药股份有限公司委托惠州市九惠制药股份有限公司","成都亿帆达生物科技有限公司委托广东多合生物科技有限公司","广州市佰健生物工程有限公司委托汤臣倍健股份有限公司","成都康弘制药有限公司委托四川济生堂药业有限公司","广州白云山奇星药业有限公司委托广州白云山中一药业有限公司","丁家宜苏州工业园区化妆品贸易有限公司委托士齐生物研发中心苏州工业园内有限公司","蓝洋药业辽宁集团有限公司委托铁岭市蓝洋医疗器械有限公司","西南药业股份有限公司委托太极集团四川太极制药有限公司","上海艾申特生物科技有限公司委托纽斯葆广赛广东生物科技股份有限公司","迪庆香格里拉雪域生物有限公司委托成都市益康药业有限公司","云南白药集团股份有限公司委托振德医疗用品股份有限公司","惠州市鑫福来实业发展有限公司委托湖北康恩萃药业有限公司","扬子江药业集团北京海燕药业有限公司委托扬子江药业集团江苏紫龙药业有限公司","紫光格林泰乐生物技术济南有限公司委托河北一然生物科技股份有限公司","广东星昊药业有限公司委托北京星昊医药股份有限公司","振德医疗用品股份有限公司委托安徽美迪斯医疗用品有限公司","以岭健康科技有限公司委托温州云上生物科技有限公司","云南通用善美制药有限责任公司委托云南云河药业股份有限公司","云南白药集团股份有限公司委托江苏南方卫材医药股份有限公司","江苏蒲地蓝日化有限公司委托苏州克劳丽化妆品有限公司","健民药业集团股份有限公司委托健民集团叶开泰国药随州有限公司","福建片仔癀化妆品有限公司委托福建省梦娇兰日用化学品有限公司","岐伯医药吉林有限公司委托广东德洲医疗器械有限公司","江西金川宁生物科技有限公司委托企业广州正龙生物科技有限公司","海南万民康肽生物科技有限公司委托江西云恩健康产业集团有限公司","华润三九枣庄药业有限公司委托方华润三九医药股份有限公司","山东新华制药股份有限公司委托方拜耳医药保健有限公司","湖南嘉晗医疗器械有限公司委托湖南银华棠医药科技有限公司","江西济仁药业有限公司委托南昌市草珊瑚生物技术有限公司","江苏南方卫材医药股份有限公司委托方桂林天和药业伊维有限公司","潮州市潮安区优崔莱食品厂委托方成都亿帆达生物科技有限公司","贵州宏宇药业有限公司委托赛维泰广州健康药业有限公司","广州白云山陈李济药厂有限公司委托惠州市乐口佳食品有限公司","广州白云山星群药业股份有限公司委托汕头市利是堂保健食品厂","江西药都樟树制药有限公司委托江西药都仁和制药有限公司","深圳市海王健康科技发展有限公司委托吉林海王健康生物科技有限公司","云南米芽科技有限公司委托丘北愚公农业发展有限责任公司","广州市惠优喜生物科技有限公司委托纽斯葆广赛广东生物科技股份有限公司","储康保健科技南京有限公司委托江苏滋补堂药业有限公司","江苏亚邦爱普森药业有限公司委托江苏亚邦强生药业有限公司","北京华素制药股份有限公司委托广州市花都区晶神保健品厂","江苏澳新生物工程有限公司浙江澳兴生物科技有限公司委托浙江柏客健实业有限公司","");
-        originalCorps = originalCorps.stream().filter(StringUtils::isNotEmpty).distinct().collect(Collectors.toList());
-
-        for (String originalCorp : originalCorps) {
-            System.out.println(originalCorp);
-            Pattern parsePattern = Pattern.compile("^(.*?)委托(.*)$");
-            Matcher matcher = parsePattern.matcher(originalCorp);
-            boolean isMatch = matcher.find();
-            if (isMatch) {
-                System.out.println(matcher.group(1));
-                Arrays.stream(tryParseCorp(matcher.group(1)).split(" ")).forEach(item -> {
-                    System.out.println(item);
-                });
-                System.out.println();
-                System.out.println(matcher.group(2));
-                Arrays.stream(tryParseCorp(matcher.group(2)).split(" ")).forEach(item -> {
-                    System.out.println(item);
-                });
-
-                System.out.println();
-                System.out.println();
-                System.out.println();
-            }
-        }
-    }
-
-    @Test
-    public void dealCorpDictionary() throws IOException {
         /* 可变参数 */
         String originalDictionaryPath = "data/xyy/dictionary/corp.original.txt";
         String dictionaryPath = "data/xyy/dictionary/corp.txt";
@@ -754,7 +188,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
 
         List<String> resultCorps = Lists.newArrayListWithExpectedSize(originalCorps.size());
         for (String originalCorp : originalCorps) {
-            originalCorp = replaceSpecialChar(originalCorp);
+            originalCorp = XyyDrugCorpusUtils.replaceSpecialChar(originalCorp);
             if (StringUtils.isNotEmpty(originalCorp)) {
                 resultCorps.add(originalCorp);
                 // 化繁为简、大写转小写，全角转半角。
@@ -773,138 +207,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
     }
 
     @Test
-    public void checkCorpDictionary() throws IOException {
-        new DynamicCustomDictionary().reload();
-
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的店铺展示名称&厂商_2024_04_02.xlsx";
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典Excel没有数据，终止");
-            return;
-        }
-//        Set<String> topQueryKeywords = Sets.newHashSet("");
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典没有数据，终止");
-            return;
-        }
-        Set<String> natureSet = Arrays.stream(XyyNatureEnum.values()).map(XyyNatureEnum::toString).collect(Collectors.toSet());
-
-        List<XyyDrugCorpusDictionaryRowDTO> resultRowDTOS = Lists.newArrayListWithExpectedSize(16);
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-//            for (String topQueryKeyword : topQueryKeywords) {
-                rowDTO.setDictionary(replaceSpecialChar(rowDTO.getDictionary()));
-//                if (rowDTO.getDictionary().contains(topQueryKeyword)) {
-                    List<Term> terms = newSegment.seg(rowDTO.getDictionary());
-                    List<String> termStrList = terms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                        return term.word + "/" + term.nature.toString();
-                    }).collect(Collectors.toList());
-                    rowDTO.setRealDictionary(String.join(" ", termStrList));
-
-                    List<Term> indexTerms = newIndexSegment.seg(rowDTO.getDictionary());
-                    List<String> indexTermStrList = indexTerms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                        return term.word + "/" + term.nature.toString();
-                    }).collect(Collectors.toList());
-                    rowDTO.setRealDictionary2(String.join(" ", indexTermStrList));
-                    resultRowDTOS.add(rowDTO);
-//                    log.info("关键词【{}】，【{}】分词：{}", topQueryKeyword, rowDTO.getDictionary(), newSegment.seg(rowDTO.getDictionary()).toString());
-//                }
-//            }
-        }
-        // 写Excel
-        String resultDictionaryExcelPath = "data/xyy/dictionary/查询EC上线中的店铺展示名称&厂商_2024_04_02_result.xlsx";
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(resultRowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(resultDictionaryExcelPath, excelRows);
-        log.debug("处理词典Excel，成功。");
-    }
-    // ====================================================================================================
-    /**
-     * 处理词典Excel
-     */
-    @Test
-    public void dealSpecDictionaryExcel() {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的规格_2024_04_02.xlsx";
-
-        // 仅仅使用默认自定义词典，避免领域数据干扰行政区域数据。
-        DynamicCustomDictionary dictionary = new DynamicCustomDictionary("data/dictionary/custom/CustomDictionary.txt");
-        dictionary.reload();
-        newSegment.enableCustomDictionary(dictionary);
-
-        /* 备份 */
-        XyyDrugCorpusDictionaryExcelOperator.backup(dictionaryExcelPath);
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("规格词典Excel没有数据，终止");
-            return;
-        }
-
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            rowDTO.setRealDictionary(this.tryParseSpec(rowDTO.getDictionary()));
-        }
-
-        // 写Excel
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(rowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(dictionaryExcelPath, excelRows);
-        log.debug("处理规格词典Excel，成功。");
-
-        // 还原自定义词典配置
-        new DynamicCustomDictionary().reload();
-    }
-
-    private String tryParseSpec(String original) {
-        original = this.replaceSpecialChar(original);
-        if (StringUtils.isEmpty(original) || original.length() <= 2) {
-            return "";
-        }
-        return original;
-    }
-
-    /**
-     * 制作词典
-     */
-    @Test
     public void makeSpecDictionary() throws IOException {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的规格_2024_04_02.xlsx";
-        String dictionaryPath = "data/xyy/dictionary/spec.original.txt";
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("规格词典Excel没有数据，终止");
-            return;
-        }
-
-        List<String> corps = this.listSpecs(rowDTOS);
-
-        File dictionaryFile = new File(dictionaryPath);
-        FileUtils.writeLines(dictionaryFile, corps);
-        log.info("规格词典成功：{}", dictionaryPath);
-    }
-
-    private List<String> listSpecs(List<XyyDrugCorpusDictionaryRowDTO> rowDTOS) {
-        List<String> specs = Lists.newArrayListWithExpectedSize(rowDTOS.size());
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            if (Objects.nonNull(rowDTO) && StringUtils.isNotEmpty(rowDTO.getRealDictionary())) {
-                specs.add(rowDTO.getRealDictionary());
-            }
-        }
-        return specs;
-    }
-
-    @Test
-    public void dealSpecDictionary() throws IOException {
         /* 可变参数 */
         String originalDictionaryPath = "data/xyy/dictionary/spec.original.txt";
         String dictionaryPath = "data/xyy/dictionary/spec.txt";
@@ -914,7 +217,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
 
         List<String> resultSpecs = Lists.newArrayListWithExpectedSize(originalSpecs.size());
         for (String originalSpec : originalSpecs) {
-            originalSpec = replaceSpecialChar(originalSpec);
+            originalSpec = XyyDrugCorpusUtils.replaceSpecialChar(originalSpec);
             if (StringUtils.isNotEmpty(originalSpec)) {
                 resultSpecs.add(originalSpec);
                 // 化繁为简、大写转小写，全角转半角。
@@ -933,150 +236,60 @@ public class XyyDrugCorpusMakeDictionaryTask {
     }
 
     @Test
-    public void checkSpecDictionary() throws IOException {
-        new DynamicCustomDictionary().reload();
-
+    public void makeCoreDictionary() throws IOException {
         /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的规格_2024_04_02.xlsx";
+        String originalDictionaryPath = "data/xyy/dictionary/core.original.txt";
+        String dictionaryPath = "data/xyy/dictionary/core.txt";
 
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典Excel没有数据，终止");
-            return;
-        }
-//        Set<String> topQueryKeywords = Sets.newHashSet("");
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("词典没有数据，终止");
-            return;
-        }
-        Set<String> natureSet = Arrays.stream(XyyNatureEnum.values()).map(XyyNatureEnum::toString).collect(Collectors.toSet());
+        // 加载词典
+        List<String> originalCores = FileUtils.readLines(new File(originalDictionaryPath), "UTF-8");
 
-        List<XyyDrugCorpusDictionaryRowDTO> resultRowDTOS = Lists.newArrayListWithExpectedSize(16);
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-//            for (String topQueryKeyword : topQueryKeywords) {
-            rowDTO.setDictionary(replaceSpecialChar(rowDTO.getDictionary()));
-//                if (rowDTO.getDictionary().contains(topQueryKeyword)) {
-            List<Term> terms = newSegment.seg(rowDTO.getDictionary());
-            List<String> termStrList = terms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                return term.word + "/" + term.nature.toString();
-            }).collect(Collectors.toList());
-            rowDTO.setRealDictionary(String.join(" ", termStrList));
-
-            List<Term> indexTerms = newIndexSegment.seg(rowDTO.getDictionary());
-            List<String> indexTermStrList = indexTerms.stream().map(term -> {
-//                        if (!natureSet.contains(term.nature.toString())) {
-//                            return term.word + "/" + XyyNatureEnum.other;
-//                        }
-                return term.word + "/" + term.nature.toString();
-            }).collect(Collectors.toList());
-            rowDTO.setRealDictionary2(String.join(" ", indexTermStrList));
-            resultRowDTOS.add(rowDTO);
-//                    log.info("关键词【{}】，【{}】分词：{}", topQueryKeyword, rowDTO.getDictionary(), newSegment.seg(rowDTO.getDictionary()).toString());
-//                }
-//            }
-        }
-        // 写Excel
-        String resultDictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的规格_2024_04_02_result.xlsx";
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(resultRowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(resultDictionaryExcelPath, excelRows);
-        log.debug("处理词典Excel，成功。");
-    }
-    // ====================================================================================================
-
-    /**
-     * 处理词典Excel
-     */
-    @Test
-    public void dealShowNameDictionaryExcel() {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的展示名称和通用名称_2024_04_02.xlsx";
-
-        /* 备份 */
-        XyyDrugCorpusDictionaryExcelOperator.backup(dictionaryExcelPath);
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("商品名称词典Excel没有数据，终止");
-            return;
-        }
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            rowDTO.setRealDictionary(this.tryParseShowName(rowDTO.getDictionary()));
-        }
-
-        // 写Excel
-        List<XyyDrugCorpusDictionaryExcelRow> excelRows = XyyDrugCorpusDictionaryExcelOperator.createExcelRows(rowDTOS);
-        XyyDrugCorpusDictionaryExcelOperator.coverWrite(dictionaryExcelPath, excelRows);
-        log.debug("处理商品名词典Excel，成功。");
-    }
-
-    private String tryParseShowName(String showName) {
-        showName = this.replaceSpecialChar(showName);
-        if (StringUtils.isEmpty(showName)) {
-            return "";
-        }
-        if (excludeShowNames.contains(showName)) {
-            return "";
-        }
-        if (specialShowNameMap.containsKey(showName)) {
-            return specialShowNameMap.get(showName);
-        }
-        // TODO 只留下核心词，多个词之间按照空格分隔
-        return newSegment.seg(showName).toString();
-    }
-
-    /**
-     * 制作词典
-     */
-    @Test
-    public void makeShowNameDictionary() throws IOException {
-        /* 可变参数 */
-        String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的展示名称和通用名称_2024_04_02.xlsx";
-        String brandDictionaryPath = "data/xyy/dictionary/brand.txt";
-        String coreDictionaryPath = "data/xyy/dictionary/core.txt";
-        String dosageDictionaryPath = "data/xyy/dictionary/dosage.txt";
-        String otherDictionaryPath = "data/xyy/dictionary/other.txt";
-
-        // 加载Excel
-        List<XyyDrugCorpusDictionaryRowDTO> rowDTOS = XyyDrugCorpusDictionaryExcelOperator.readAllRows(dictionaryExcelPath);
-        if (CollectionUtils.isEmpty(rowDTOS)) {
-            log.info("商品名词典Excel没有数据，终止");
-            return;
-        }
-        Set<String> corps = this.listCores(rowDTOS);
-        File dictionaryFile = new File(coreDictionaryPath);
-        FileUtils.writeLines(dictionaryFile, corps);
-        log.info("制作词典成功：{}", coreDictionaryPath);
-    }
-
-    private Set<String> listCores(List<XyyDrugCorpusDictionaryRowDTO> rowDTOS) {
-        Set<String> showNames = Sets.newHashSetWithExpectedSize(rowDTOS.size());
-        for (XyyDrugCorpusDictionaryRowDTO rowDTO : rowDTOS) {
-            if (Objects.nonNull(rowDTO) && StringUtils.isNotEmpty(rowDTO.getRealDictionary())) {
-                String[] words = rowDTO.getRealDictionary().split(" ");
-                for (String word : words) {
-                    showNames.add(word);
-                    // 化繁为简、大写转小写，全角转半角。
-                    String convertDictionary = CharTable.convert(word);
-                    if (!Objects.equals(word, convertDictionary)) {
-                        showNames.add(convertDictionary);
-                    }
+        List<String> resultCores = Lists.newArrayListWithExpectedSize(originalCores.size());
+        for (String originalCore : originalCores) {
+            originalCore = XyyDrugCorpusUtils.replaceSpecialChar(originalCore);
+            if (StringUtils.isNotEmpty(originalCore)) {
+                resultCores.add(originalCore);
+                // 化繁为简、大写转小写，全角转半角。
+                String convertDictionary = CharTable.convert(originalCore);
+                if (!Objects.equals(originalCore, convertDictionary)) {
+                    resultCores.add(convertDictionary);
                 }
             }
         }
-        return showNames;
+        // 排序
+        resultCores = resultCores.stream()
+//                .sorted(String::compareTo)
+                .distinct().collect(Collectors.toList());
+        File dictionaryFile = new File(dictionaryPath);
+        FileUtils.writeLines(dictionaryFile, resultCores);
     }
 
+    @Test
+    public void makeOtherDictionary() throws IOException {
+        /* 可变参数 */
+        String originalDictionaryPath = "data/xyy/dictionary/other.original.txt";
+        String dictionaryPath = "data/xyy/dictionary/other.txt";
 
-    private String replaceSpecialChar(String original) {
-        if (StringUtils.isEmpty(original)) {
-            return "";
+        // 加载词典
+        List<String> originalOthers = FileUtils.readLines(new File(originalDictionaryPath), "UTF-8");
+
+        List<String> resultOthers = Lists.newArrayListWithExpectedSize(originalOthers.size());
+        for (String originalOther : originalOthers) {
+            originalOther = XyyDrugCorpusUtils.replaceSpecialChar(originalOther);
+            if (StringUtils.isNotEmpty(originalOther)) {
+                resultOthers.add(originalOther);
+                // 化繁为简、大写转小写，全角转半角。
+                String convertDictionary = CharTable.convert(originalOther);
+                if (!Objects.equals(originalOther, convertDictionary)) {
+                    resultOthers.add(convertDictionary);
+                }
+            }
         }
-        return original.replaceAll("[^\\u4e00-\\u9fa5a-zA-Z0-9.*.]+", "");
+        // 排序
+        resultOthers = resultOthers.stream()
+//                .sorted(String::compareTo)
+                .distinct().collect(Collectors.toList());
+        File dictionaryFile = new File(dictionaryPath);
+        FileUtils.writeLines(dictionaryFile, resultOthers);
     }
-
 }
