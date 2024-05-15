@@ -35,14 +35,14 @@ public class XyyDrugCorpusDictionaryExcelRow implements Serializable {
     /**
      * 词典
      */
-    @ColumnWidth(value = 100)
+    @ColumnWidth(value = 200)
     @ExcelProperty(index = 1)
     private String realDictionary;
 
     /**
      * 词典
      */
-    @ColumnWidth(value = 100)
+    @ColumnWidth(value = 200)
     @ExcelProperty(index = 2)
     private String realDictionary2;
 }

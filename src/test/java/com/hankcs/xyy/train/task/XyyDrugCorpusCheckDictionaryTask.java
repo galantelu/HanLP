@@ -3,8 +3,11 @@ package com.hankcs.xyy.train.task;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Sets;
 import com.hankcs.hanlp.HanLP;
+import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
+import com.hankcs.hanlp.dictionary.nr.NRDictionary;
+import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.xyy.train.dto.XyyDrugCorpusDictionaryRowDTO;
@@ -156,7 +159,18 @@ public class XyyDrugCorpusCheckDictionaryTask {
 
     @Test
     public void nerShowName() throws IOException {
+//        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露", "感冒灵", "阿莫西林", "苯磺酸氨氯地平", "西络宁", "金嗓子", "唫嗓子", "救心",
+//        "拉唑肠溶");
+//        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露");
+//        Set<String> topQueryKeywords = Sets.newHashSet("感冒灵");
+//        Set<String> topQueryKeywords = Sets.newHashSet("阿莫西林");
+//        Set<String> topQueryKeywords = Sets.newHashSet("苯磺酸氨氯地平", "西络宁");
+//        Set<String> topQueryKeywords = Sets.newHashSet("金嗓子", "唫嗓子");
+//        Set<String> topQueryKeywords = Sets.newHashSet("救心");
+        Set<String> topQueryKeywords = Sets.newHashSet("拉唑肠溶");
+
         CustomDictionary.reload();
+        CoreDictionary.reload();
 
         /* 可变参数 */
         String dictionaryExcelPath = "data/xyy/dictionary/查询EC在售商品的展示名称和通用名称_2024_04_02.xlsx";
@@ -167,10 +181,6 @@ public class XyyDrugCorpusCheckDictionaryTask {
             log.info("Excel没有数据，终止");
             return;
         }
-        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露", "感冒灵", "阿莫西林");
-//        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露");
-//        Set<String> topQueryKeywords = Sets.newHashSet("感冒灵");
-//        Set<String> topQueryKeywords = Sets.newHashSet("阿莫西林");
         if (CollectionUtils.isEmpty(rowDTOS)) {
             log.info("没有数据，终止");
             return;

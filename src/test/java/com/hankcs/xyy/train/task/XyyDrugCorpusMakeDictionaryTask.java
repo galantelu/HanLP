@@ -32,6 +32,13 @@ public class XyyDrugCorpusMakeDictionaryTask {
         String coreDictionaryPath = "data/xyy/dictionary/core.original.txt";
         String otherDictionaryPath = "data/xyy/dictionary/other.original.txt";
 
+//        String brandDictionaryPath = "data/xyy/dictionary/brand.txt";
+//        String corpDictionaryPath = "data/xyy/dictionary/corp.txt";
+//        String specDictionaryPath = "data/xyy/dictionary/spec.txt";
+//        String dosageDictionaryPath = "data/xyy/dictionary/dosage.txt";
+//        String coreDictionaryPath = "data/xyy/dictionary/core.txt";
+//        String otherDictionaryPath = "data/xyy/dictionary/other.txt";
+
         Set<String> brands = Sets.newHashSet(FileUtils.readLines(new File(brandDictionaryPath), "UTF-8"));
         brands.remove("");
 
