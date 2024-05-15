@@ -16,63 +16,66 @@ public enum XyyNatureEnum {
     /**
      * 品牌
      */
-    brand(Nature.create("brand")),
+    brand(Nature.create("brand"), "品牌词"),
     /**
      * 核心词
      */
-    core(Nature.create("core")),
+    core(Nature.create("core"), "核心词"),
     /**
      * 剂型
      */
-    dosage(Nature.create("dosage")),
+    dosage(Nature.create("dosage"), "剂型词"),
     /**
      * 企业名称
      */
-    corp(Nature.create("corp")),
+    corp(Nature.create("corp"), "企业词"),
     /**
      * 规格
      */
-    spec(Nature.create("spec")),
+    spec(Nature.create("spec"), "规格词"),
     /**
      * other
      */
-    other(Nature.create("other")),
+    other(Nature.create("other"), "其他词"),
 
     /* ==========以下为废弃=========== */
     /**
      * 子品牌
      */
-    subBrand(Nature.create("subBrand")),
+    subBrand(Nature.create("subBrand"), "子品牌"),
     /**
      * 成分
      */
-    ingredient(Nature.create("ingredient")),
+    ingredient(Nature.create("ingredient"), "成分"),
     /**
      * 适应症
      */
-    disease(Nature.create("disease")),
+    disease(Nature.create("disease"), "适应症"),
     /**
      * 修饰词
      */
-    qualifier(Nature.create("qualifier")),
+    qualifier(Nature.create("qualifier"), "修饰词"),
     /**
      * 规格：单位
      */
-    specUint(Nature.create("specUint")),
+    specUint(Nature.create("specUint"), "规格：单位"),
     /**
      * 规格：总量
      */
-    specTotal(Nature.create("specTotal")),
+    specTotal(Nature.create("specTotal"), "规格：总量"),
     /**
      * 包装类型
      */
-    packaging(Nature.create("packaging")),
+    packaging(Nature.create("packaging"), "包装类型"),
 
     ;
     private Nature nature;
 
-    XyyNatureEnum(Nature nature) {
+    private String desc;
+
+    XyyNatureEnum(Nature nature, String desc) {
         this.nature = nature;
+        this.desc = desc;
     }
 
     /**

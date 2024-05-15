@@ -84,7 +84,7 @@ public class XyyDrugCorpusMakeDictionaryTask {
 
     }
 
-    @Test
+//    @Test
     public void dealDictionaryDuplicate() throws IOException {
         /* 可变参数 */
         String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";

@@ -17,7 +17,7 @@ public class XyyCustomDictionaryNerTest {
         CoreDictionary.reload();
         CustomDictionary.reload();
 
-//        HanLP.Config.enableDebug();
+        HanLP.Config.enableDebug();
 
         /* HMM-Bigram分词-最短分路： */
         // 方式三：新建分词器
