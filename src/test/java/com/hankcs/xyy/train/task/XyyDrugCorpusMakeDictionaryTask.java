@@ -23,21 +23,34 @@ import java.util.stream.Collectors;
 public class XyyDrugCorpusMakeDictionaryTask {
 
     @Test
+    public void makeDictionary() throws IOException {
+        makeBrandDictionary();
+        makeDosageDictionary();
+        makeCorpDictionary();
+        makeSpecDictionary();
+        makeCoreDictionary();
+        makeOtherDictionary();
+
+        // 校验重复性
+        checkDictionaryDuplicate();
+    }
+
+    @Test
     public void checkDictionaryDuplicate() throws IOException {
         /* 可变参数 */
-        String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";
-        String corpDictionaryPath = "data/xyy/dictionary/corp.original.txt";
-        String specDictionaryPath = "data/xyy/dictionary/spec.original.txt";
-        String dosageDictionaryPath = "data/xyy/dictionary/dosage.original.txt";
-        String coreDictionaryPath = "data/xyy/dictionary/core.original.txt";
-        String otherDictionaryPath = "data/xyy/dictionary/other.original.txt";
+//        String brandDictionaryPath = "data/xyy/dictionary/brand.original.txt";
+//        String corpDictionaryPath = "data/xyy/dictionary/corp.original.txt";
+//        String specDictionaryPath = "data/xyy/dictionary/spec.original.txt";
+//        String dosageDictionaryPath = "data/xyy/dictionary/dosage.original.txt";
+//        String coreDictionaryPath = "data/xyy/dictionary/core.original.txt";
+//        String otherDictionaryPath = "data/xyy/dictionary/other.original.txt";
 
-//        String brandDictionaryPath = "data/xyy/dictionary/brand.txt";
-//        String corpDictionaryPath = "data/xyy/dictionary/corp.txt";
-//        String specDictionaryPath = "data/xyy/dictionary/spec.txt";
-//        String dosageDictionaryPath = "data/xyy/dictionary/dosage.txt";
-//        String coreDictionaryPath = "data/xyy/dictionary/core.txt";
-//        String otherDictionaryPath = "data/xyy/dictionary/other.txt";
+        String brandDictionaryPath = "data/xyy/dictionary/brand.txt";
+        String corpDictionaryPath = "data/xyy/dictionary/corp.txt";
+        String specDictionaryPath = "data/xyy/dictionary/spec.txt";
+        String dosageDictionaryPath = "data/xyy/dictionary/dosage.txt";
+        String coreDictionaryPath = "data/xyy/dictionary/core.txt";
+        String otherDictionaryPath = "data/xyy/dictionary/other.txt";
 
         Set<String> brands = Sets.newHashSet(FileUtils.readLines(new File(brandDictionaryPath), "UTF-8"));
         brands.remove("");
@@ -114,16 +127,6 @@ public class XyyDrugCorpusMakeDictionaryTask {
             FileUtils.writeLines(dictionaryFile, originalBrands);
         }
 
-    }
-
-    @Test
-    public void makeDictionary() throws IOException {
-        makeBrandDictionary();
-        makeDosageDictionary();
-        makeCorpDictionary();
-        makeSpecDictionary();
-        makeCoreDictionary();
-        makeOtherDictionary();
     }
 
     @Test

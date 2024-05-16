@@ -159,15 +159,24 @@ public class XyyDrugCorpusCheckDictionaryTask {
 
     @Test
     public void nerShowName() throws IOException {
-//        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露", "感冒灵", "阿莫西林", "苯磺酸氨氯地平", "西络宁", "金嗓子", "唫嗓子", "救心",
-//        "拉唑肠溶");
-//        Set<String> topQueryKeywords = Sets.newHashSet("枇杷露");
-//        Set<String> topQueryKeywords = Sets.newHashSet("感冒灵");
-//        Set<String> topQueryKeywords = Sets.newHashSet("阿莫西林");
-//        Set<String> topQueryKeywords = Sets.newHashSet("苯磺酸氨氯地平", "西络宁");
-//        Set<String> topQueryKeywords = Sets.newHashSet("金嗓子", "唫嗓子");
-//        Set<String> topQueryKeywords = Sets.newHashSet("救心");
-        Set<String> topQueryKeywords = Sets.newHashSet("拉唑肠溶");
+        Set<String> topQueryKeywords = Sets.newHashSet();
+//        topQueryKeywords.add("枇杷露");
+//        topQueryKeywords.add("感冒灵");
+//        topQueryKeywords.add("阿莫西林");
+//        topQueryKeywords.add("苯磺酸氨氯地平");
+//        topQueryKeywords.add("西络宁");
+//        topQueryKeywords.add("金嗓子");
+//        topQueryKeywords.add("唫嗓子");
+//        topQueryKeywords.add("救心");
+//        topQueryKeywords.add("拉唑肠溶");
+        topQueryKeywords.add("万通");
+        topQueryKeywords.add("筋骨");
+//        topQueryKeywords.add("蒲地蓝消炎");
+
+        if (CollectionUtils.isEmpty(topQueryKeywords)) {
+            log.debug("没有top搜索词。");
+            return;
+        }
 
         CustomDictionary.reload();
         CoreDictionary.reload();
