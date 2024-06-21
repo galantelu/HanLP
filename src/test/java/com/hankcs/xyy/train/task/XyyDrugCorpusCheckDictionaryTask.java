@@ -6,8 +6,6 @@ import com.hankcs.hanlp.HanLP;
 import com.hankcs.hanlp.dictionary.CoreDictionary;
 import com.hankcs.hanlp.dictionary.CustomDictionary;
 import com.hankcs.hanlp.dictionary.DynamicCustomDictionary;
-import com.hankcs.hanlp.dictionary.nr.NRDictionary;
-import com.hankcs.hanlp.dictionary.nr.PersonDictionary;
 import com.hankcs.hanlp.seg.Segment;
 import com.hankcs.hanlp.seg.common.Term;
 import com.hankcs.xyy.train.dto.XyyDrugCorpusDictionaryRowDTO;
@@ -169,9 +167,69 @@ public class XyyDrugCorpusCheckDictionaryTask {
 //        topQueryKeywords.add("唫嗓子");
 //        topQueryKeywords.add("救心");
 //        topQueryKeywords.add("拉唑肠溶");
-        topQueryKeywords.add("万通");
-        topQueryKeywords.add("筋骨");
+//        topQueryKeywords.add("万通");
+//        topQueryKeywords.add("筋骨");
 //        topQueryKeywords.add("蒲地蓝消炎");
+//        topQueryKeywords.add("诺氟沙星");
+//        topQueryKeywords.add("达格列净");
+//        topQueryKeywords.add("阿司匹林");
+//        topQueryKeywords.add("连花清瘟");
+//        topQueryKeywords.add("拜新同");
+//        topQueryKeywords.add("龙牡壮骨");
+//        topQueryKeywords.add("小柴胡");
+//        topQueryKeywords.add("葡萄糖");
+//        topQueryKeywords.add("维生素");
+//        topQueryKeywords.add("藿香正气");
+//        topQueryKeywords.add("云南白药");
+//        topQueryKeywords.add("头孢");
+//        topQueryKeywords.add("心宝");
+//        topQueryKeywords.add("蓝芩");
+//        topQueryKeywords.add("六味");
+//        topQueryKeywords.add("马应龙");
+//        topQueryKeywords.add("枇杷膏");
+//        topQueryKeywords.add("沙库巴曲缬沙坦钠");
+//        topQueryKeywords.add("健胃消食");
+//        topQueryKeywords.add("护肝");
+//        topQueryKeywords.add("厄贝沙坦");
+//        topQueryKeywords.add("奥司他韦");
+//        topQueryKeywords.add("牛黄");
+//        topQueryKeywords.add("稳心");
+
+//        topQueryKeywords.add("阿斯美");
+//        topQueryKeywords.add("波立维");
+//        topQueryKeywords.add("三金");
+//        topQueryKeywords.add("硝苯地平");
+//        topQueryKeywords.add("甲氧那明");
+//        topQueryKeywords.add("立普妥");
+//        topQueryKeywords.add("布洛芬");
+//        topQueryKeywords.add("他达拉非");
+//
+//        topQueryKeywords.add("止嗽");
+//        topQueryKeywords.add("阿奇霉素");
+//        topQueryKeywords.add("西地那非");
+//        topQueryKeywords.add("感康");
+//
+//        topQueryKeywords.add("替米沙坦");
+//        topQueryKeywords.add("金戈");
+//        topQueryKeywords.add("丹参");
+//        topQueryKeywords.add("养心");
+//        topQueryKeywords.add("缬沙坦");
+//        topQueryKeywords.add("保心丸");
+//        topQueryKeywords.add("瑞舒伐他汀");
+
+//        topQueryKeywords.add("达格列净");
+//        topQueryKeywords.add("二甲双胍");
+//        topQueryKeywords.add("当归");
+//        topQueryKeywords.add("安神补脑");
+//        topQueryKeywords.add("白术");
+//        topQueryKeywords.add("施慧达");
+
+//        topQueryKeywords.add("美托洛尔");
+//        topQueryKeywords.add("琥珀酸");
+//        topQueryKeywords.add("阿胶");
+//        topQueryKeywords.add("金银花");
+//        topQueryKeywords.add("咳特灵");
+//        topQueryKeywords.add("氨酚黄那敏");
 
         if (CollectionUtils.isEmpty(topQueryKeywords)) {
             log.debug("没有top搜索词。");

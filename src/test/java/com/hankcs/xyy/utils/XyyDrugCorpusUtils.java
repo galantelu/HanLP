@@ -8,7 +8,7 @@ public class XyyDrugCorpusUtils {
         if (StringUtils.isEmpty(original)) {
             return "";
         }
-        return original.replaceAll("[^\\u4e00-\\u9fa5a-zA-Z0-9.*.]+", "");
+        return original.replaceAll("[`~!@#$%^&()\\-_+={}\\[\\]|:;'\",<>\\\\/?`~！@#￥%……&（）——+=「」【】|、：；‘’“” 《》、，。？\\s]", "");
     }
 
 }
