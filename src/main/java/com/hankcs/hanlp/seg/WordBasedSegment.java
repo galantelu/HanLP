@@ -442,7 +442,7 @@ public abstract class WordBasedSegment extends Segment
             Term termMain = convert(vertex);
             termList.add(termMain);
             termMain.offset = line - 1;
-            if (vertex.realWord.length() > 2)
+            if (vertex.realWord.length() >= 2)
             {
                 // 过长词所在的行
                 int currentLine = line;
